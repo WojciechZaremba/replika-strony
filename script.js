@@ -17,6 +17,9 @@ moreExpander.setAttribute("id", "more")
 moreExpander.append(moreTxt, moreArrow)
 
 function adjustLastExpanderLower() {
+    if (hiddenNodes.left.length > 0) {
+        handleNavbarArrows("dummy")
+    }
     const dashMargin = getComputedStyle(dashboard).getPropertyValue("margin-left")
     const marginNum = Number(dashMargin.slice(0, -2))
 
@@ -45,6 +48,116 @@ function adjustLastExpanderLower() {
         removedNodesDown.pop()
     }
 }
+
+// UPPER EXPANDER ADJUSTMENTS (ARROWS):
+
+const search = document.getElementsByClassName("searchButton")[0]
+const arrUpNodes = Array.from(document.querySelectorAll(".expElemTop")).map(elem => [elem, elem.clientWidth])
+const expBarWidth = arrUpNodes.reduce((a,c) => a + c[1] + 8, -8) // -8 because there are fewer gaps than elements
+const hiddenNodes = { left: [], right: [] }
+const searchButton = document.querySelector(".searchButton")
+
+leftArrow.style.display = "none"
+rightArrow.style.display = "none"
+
+function adjustLastExpanderUpper(e) {
+    const countArrow = rightArrow.style.display === "none" ? 0 : 34
+    
+    let spaceRight = 0
+    const searchMarginNum = Number(getComputedStyle(search).getPropertyValue("margin-left").slice(0, -2))
+    
+    const curRight = arrUpNodes[arrUpNodes.length - 1 - hiddenNodes.right.length]
+    // const curRightNode = curRight[0] 
+    // const curRightWidth = curRight[1]
+    const lastRemoved = hiddenNodes.right[hiddenNodes.right.length - 1]?.[0]
+    const lastLength = hiddenNodes.right[hiddenNodes.right.length - 1]?.[1]
+
+    if (searchMarginNum - countArrow <= 0 && hiddenNodes.right.length < arrUpNodes.length - 1) {
+        console.log("remove from the right")
+        curRight[0].style.display = "none"
+        hiddenNodes.right.push(curRight)
+        rightArrow.style.display = "flex"
+    } else if (searchMarginNum - lastLength - countArrow > 0 && hiddenNodes.right.length >= 2) {
+        console.log("add to the right")
+        // hiddenNodes.right[hiddenNodes.right.length - 1]?.[0].style.display = "flex" 
+        // invalid left side assignemnt (???)
+        lastRemoved.style.display = "flex"
+        hiddenNodes.right.pop()
+    } else if (searchMarginNum - lastLength > 0 && hiddenNodes.right.length <= 1) {
+        console.log("add last to the right")
+        lastRemoved.style.display = "flex"
+        hiddenNodes.right.pop()
+        rightArrow.style.display = "none"
+    }
+}
+function handleNavbarArrows(e) {
+    const searchMarginNum = Number(getComputedStyle(search).getPropertyValue("margin-left").slice(0, -2))
+
+    const countArrowR = rightArrow.style.display === "none" ? 0 : 34
+    // const countArrowL = leftArrow.style.display === "none" ? 0 : 34
+
+    const currentExpWidth = document.querySelector(".expTop").clientWidth
+    const spaceAvaiable = searchMarginNum + currentExpWidth - countArrowR
+
+    hiddenNodes.right = []
+    hiddenNodes.left = []
+    for (let node of arrUpNodes) { node[0].style.display = "none"}
+    let spaceLeft = spaceAvaiable
+    
+    if (e !== "dummy" && e.currentTarget.id === "rightArrow") {
+        // SHOW MAXIMUM FROM THE RIGHT
+        for (let i = arrUpNodes.length - 1; i >= 0; i--) {
+            if (spaceLeft - arrUpNodes[i][1] >= 0) {
+                spaceLeft = spaceLeft - arrUpNodes[i][1]
+                arrUpNodes[i][0].style.display = "flex"
+            } else if (spaceLeft - arrUpNodes[i][1] <= 0) {
+                for (let j = i; j >= 0; j--) {
+                    hiddenNodes.left.unshift(arrUpNodes[j])
+                }
+                break
+            }
+        }
+        rightArrow.style.display = "none"
+        leftArrow.style.display = "flex"
+    } else if (e === "dummy" || e.currentTarget.id === "leftArrow") {
+        // SHOW MAXIMUM FROM THE LEFT
+        for (let i = 0; i < arrUpNodes.length; i++) {
+            if (spaceLeft - arrUpNodes[i][1] + 8 > 0) { // +8 quick fix, left arrow adds one flex gap
+                spaceLeft = spaceLeft - arrUpNodes[i][1]
+                arrUpNodes[i][0].style.display = "flex"
+            } else if (spaceLeft - arrUpNodes[i][1] <= 0) {
+                for (let j = i; j < arrUpNodes.length; j++) {
+                    hiddenNodes.right.unshift(arrUpNodes[j])
+                }
+                break
+            }
+        }
+        rightArrow.style.display = "flex"
+        leftArrow.style.display = "none"
+    }
+}
+
+function spaceWarning() {
+    const searchMarginNum = Number(getComputedStyle(search).getPropertyValue("margin-left").slice(0, -2))
+    const countArrowR = rightArrow.style.display === "none" ? 0 : 34
+    const countArrowL = leftArrow.style.display === "none" ? 0 : 34
+    const currentExpWidth = document.querySelector(".expTop").clientWidth
+    const spaceAvaiable = searchMarginNum + currentExpWidth - countArrowR - countArrowL
+
+    let left = 0
+    let right = 0
+
+    for (let i = 0; i < Math.ceil(arrUpNodes.length / 2); i++) {
+        left += arrUpNodes[i][1]
+        right += arrUpNodes[arrUpNodes.length - 1 - i][1]
+    }
+
+    if (left > spaceAvaiable || right > spaceAvaiable) {
+        console.warn("Warning: not enough space in the top navbar")
+        console.warn("left ", left, " or ", "right ", right, "is more than ", spaceAvaiable)
+    }
+}
+
 
 // // UPPER EXPANDER ADJUSTMENTS (ARROWS):
 // const search = document.getElementsByClassName("searchButton")[0]
@@ -133,6 +246,7 @@ function shouldResize(n = 0) {
     if (body.scrollWidth > body.clientWidth) {
         adjustLastExpanderLower()
         adjustLastExpanderUpper()
+        // adjustLastExpanderUpper()
         shouldResize(n + 1)
     }
 }
@@ -141,6 +255,7 @@ onload = () => {
     try { shouldResize() } 
     catch (e) { console.error(e) }
 }
-onresize = () => {adjustLastExpanderLower(); adjustLastExpanderUpper()}       
-onclick = () => {adjustLastExpanderLower(); adjustLastExpanderUpper()}       
-arrowExpander.addEventListener("click", handleArrowClick)
+onresize = () =>  {adjustLastExpanderLower(); adjustLastExpanderUpper(); spaceWarning()}       
+
+rightArrow.addEventListener("click", (e) => handleNavbarArrows(e))
+leftArrow.addEventListener("click", (e) => handleNavbarArrows(e))

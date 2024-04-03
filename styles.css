@@ -67,8 +67,12 @@ body {
     font-size: 14px;
 }
 .expTop {
-    column-gap: 8px;
+    /* column-gap: 8px; */
 }
+/* .expElemTop:last-child {
+    padding-right: 0;
+    background-color: #404040;
+} */
 .expanderElement {
     display: flex;
     align-items: center;
@@ -164,15 +168,25 @@ body {
     border-block-end: 0.15rem #e6e6e6 solid;
     transform: translate(160%, -76%) rotate(45deg);
 }
-#arrow {
+.button {
+    display: flex;
+    align-items: center;
+}
+#rightArrow {
     position: absolute;
     right: 120px;
+}
+#rightArrow, #leftArrow {
+    /* position: absolute; */
+    /* right: 120px; */
     height: 53px;
     padding-right: 11px;
     padding-left: 6px;
+    background-color: #404040;
 }
-#arrow:hover {
+#leftArrow:hover, #rightArrow:hover {
     background-color: #8e8e8e0d;
+    cursor: pointer;
 }
 .signIn {
     line-height: 160%;
@@ -185,6 +199,7 @@ body {
     cursor: pointer;
 }
 .navbarBigButton {
+    padding-right: 8px;
     font-size: 18px;
     font-weight: 600;
     white-space: nowrap;
