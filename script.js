@@ -18,6 +18,7 @@ moreExpander.append(moreTxt, moreArrow)
 
 function adjustLastExpanderLower() {
     if (hiddenNodes.left.length > 0) {
+        console.log("do sth")
         handleNavbarArrows("dummy")
     }
     const dashMargin = getComputedStyle(dashboard).getPropertyValue("margin-left")
@@ -158,6 +159,46 @@ function spaceWarning() {
     }
 }
 
+// ADJUST COLUMS HEIGHT
+
+const column = document.querySelector(".column")
+const additionals = document.querySelector(".additionals")
+
+function adjustColumnsHeight() {
+    const offTop = column.getBoundingClientRect().y > 0 ? column.getBoundingClientRect().y : 0
+    const offBottom = window.innerHeight - document.querySelector(".footer").getBoundingClientRect().y
+    const desiredHeight = offBottom > 0 ? window.innerHeight - offBottom - offTop : window.innerHeight - offTop
+
+    column.style.height = `${desiredHeight}px`
+    additionals.style.height = `${desiredHeight}px`
+
+}
+
+
+
+
+// OTHER
+
+function shouldResize(n = 0) {
+    if (n >= 10) throw new Error('something went wrong');
+    if (body.scrollWidth > body.clientWidth) {
+        adjustLastExpanderLower()
+        adjustLastExpanderUpper()
+        // adjustLastExpanderUpper()
+        shouldResize(n + 1)
+    }
+}
+
+onload = () => {
+    try { shouldResize(); adjustColumnsHeight() } 
+    catch (e) { console.error(e) }
+}
+onresize = () =>  {adjustLastExpanderLower(); adjustLastExpanderUpper(); spaceWarning()}
+
+onscroll = adjustColumnsHeight
+
+rightArrow.addEventListener("click", (e) => handleNavbarArrows(e))
+leftArrow.addEventListener("click", (e) => handleNavbarArrows(e))
 
 // // UPPER EXPANDER ADJUSTMENTS (ARROWS):
 // const search = document.getElementsByClassName("searchButton")[0]
@@ -240,22 +281,3 @@ function spaceWarning() {
 //         // arrowIcon.classList.add("rotateToLeft")
 //     }
 // }
-
-function shouldResize(n = 0) {
-    if (n >= 10) throw new Error('something went wrong');
-    if (body.scrollWidth > body.clientWidth) {
-        adjustLastExpanderLower()
-        adjustLastExpanderUpper()
-        // adjustLastExpanderUpper()
-        shouldResize(n + 1)
-    }
-}
-
-onload = () => {
-    try { shouldResize() } 
-    catch (e) { console.error(e) }
-}
-onresize = () =>  {adjustLastExpanderLower(); adjustLastExpanderUpper(); spaceWarning()}       
-
-rightArrow.addEventListener("click", (e) => handleNavbarArrows(e))
-leftArrow.addEventListener("click", (e) => handleNavbarArrows(e))
