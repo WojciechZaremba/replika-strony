@@ -174,7 +174,34 @@ function adjustColumnsHeight() {
 
 }
 
+// COLUMN NAVIGATION 
 
+const colChapters = document.querySelectorAll(".contentChapter")
+
+function handleChapterClick(e) {
+    const expanded1 = e.currentTarget.querySelector(".contentExpanded")
+    const arrow = e.currentTarget.querySelector(".chapterIndicatorIcon")
+    expanded1.classList.toggle("hidden")
+    arrow.classList.toggle("rotateClass")
+
+    // const expanded = e.target.querySelector(".contentExpanded")
+    // if (e.target === e.currentTarget || e.target.classList.contains(".chapterIndicator")) {
+    //     console.log("a")
+    //     expanded.classList.toggle("hidden")
+        
+    //     // if (expanded.classList.contains("contentExpanded") 
+    //     //     && expanded.style.display != "none") {
+    //     //     expanded.style.display = "none"
+    //     // } else if (expanded.classList.contains("contentExpanded") 
+    //     //            && expanded.style.display === "none") {
+    //     //     expanded.style.display = "block"
+    //     // }
+    // }
+}
+
+for (let chapter of colChapters) {
+    chapter.addEventListener("click", (e) => handleChapterClick(e))
+}
 
 
 // OTHER
