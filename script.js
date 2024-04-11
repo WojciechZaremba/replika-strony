@@ -203,6 +203,47 @@ for (let chapter of colChapters) {
     chapter.addEventListener("click", (e) => handleChapterClick(e))
 }
 
+// BREADCRUMB
+
+const breadcrumb = document.querySelector(".breadcrumb")
+const article = document.querySelector(".article")
+
+const dots = document.querySelector(".breadSummary")
+
+dots.style.display = "none"
+
+let i = 3
+let lastWidth = undefined
+let lastRemoved = undefined
+
+const widthArray = []
+
+function adjustBreadcrumb() {
+    console.log("breadcrumb width",breadcrumb.clientWidth)
+    if (breadcrumb.clientWidth > article.clientWidth * 0.8) {
+        console.log("REMOVE")
+        lastRemoved = breadcrumb.childNodes[i]
+        lastWidth = lastRemoved.clientWidth
+        console.log("last width",lastWidth)
+        widthArray.unshift(lastWidth)
+        lastRemoved.style.display = "none"
+        dots.style.display = ""
+        i += 2
+    } 
+    else if (breadcrumb.clientWidth + widthArray[0] < article.clientWidth * 0.8) {
+        console.log("ADD")
+        console.log("bread width", breadcrumb.clientWidth)
+        console.log("last width", lastWidth)
+        console.log("sum:",breadcrumb.clientWidth + lastWidth)
+        console.log("article width * 0.85", article.clientWidth * 0.8)
+        i -= 2
+        lastRemoved = breadcrumb.childNodes[i]
+        lastRemoved.style.display = ""
+        widthArray.shift()
+        lastWidth = widthArray[0]
+        if (widthArray.length === 0) dots.style.display = "none"
+    }
+}
 
 // OTHER
 
@@ -217,10 +258,22 @@ function shouldResize(n = 0) {
 }
 
 onload = () => {
-    try { shouldResize(); adjustColumnsHeight() } 
+    try { 
+        shouldResize()
+        adjustColumnsHeight()
+        document.querySelector(".activeContent").scrollIntoView()
+        adjustBreadcrumb()
+     } 
     catch (e) { console.error(e) }
 }
-onresize = () =>  {adjustLastExpanderLower(); adjustLastExpanderUpper(); spaceWarning()}
+onresize = () =>  {
+    adjustColumnsHeight()
+    adjustLastExpanderLower()
+    adjustLastExpanderUpper()
+    spaceWarning()
+    adjustBreadcrumb()
+}
+    
 
 onscroll = adjustColumnsHeight
 
