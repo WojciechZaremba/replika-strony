@@ -168,10 +168,11 @@ function adjustColumnsHeight() {
     const offTop = column.getBoundingClientRect().y > 0 ? column.getBoundingClientRect().y : 0
     const offBottom = window.innerHeight - document.querySelector(".footer").getBoundingClientRect().y
     const desiredHeight = offBottom > 0 ? window.innerHeight - offBottom - offTop : window.innerHeight - offTop
-
+    
     column.style.height = `${desiredHeight}px`
-    additionals.style.height = `${desiredHeight}px`
-
+    
+    const diff = window.innerHeight - additionals.clientHeight
+    additionals.style.top = diff < 0 ? `${diff}px` : `${0}px`
 }
 
 // COLUMN NAVIGATION 
@@ -220,7 +221,7 @@ const widthArray = []
 
 function adjustBreadcrumb() {
     console.log("breadcrumb width",breadcrumb.clientWidth)
-    if (breadcrumb.clientWidth > article.clientWidth * 0.8) {
+    if (breadcrumb.clientWidth > article.clientWidth * 0.85) {
         console.log("REMOVE")
         lastRemoved = breadcrumb.childNodes[i]
         lastWidth = lastRemoved.clientWidth
@@ -235,7 +236,7 @@ function adjustBreadcrumb() {
         console.log("bread width", breadcrumb.clientWidth)
         console.log("last width", lastWidth)
         console.log("sum:",breadcrumb.clientWidth + lastWidth)
-        console.log("article width * 0.85", article.clientWidth * 0.8)
+        console.log("article width * 0.85", article.clientWidth * 0.85)
         i -= 2
         lastRemoved = breadcrumb.childNodes[i]
         lastRemoved.style.display = ""

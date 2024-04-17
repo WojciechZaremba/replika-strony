@@ -132,23 +132,235 @@
                 <li><a href="#">Get Started</a></li>
                 <li><a href="#">Get Started with Win32 and C++</a></li>
             </ul>
-            <div class="editorButtons"></div>
+            <div class="editorButtons" style="display: none">e</div>
             <div class="content">
-                <div class="title"></div>
+                <!-- <div class="title"></div>
                 <div class="metadata"></div>
                 <div class="feedbackButton"></div>
                 <div class="inThisArticle"></div>
                 <div class="shortcuts"></div>
                 <p class="paragraph"></p>
                 <img src="" alt="">
-                <div class="code"></div>
+                <div class="code"></div> -->
+                <h1 class="articleTitle">Applying Transforms in Direct2D</h1>
+                    <div class="metaContainer">
+                        <div class="metaBar">
+                            <ul class="metaList">
+                                <li>Article</li>
+                                <li><time>08/19/2020</time></li>
+                                <li><button class="contributors">7 contributors</button></li>
+                            </ul>
+                        </div>
+                        <div class="feedbackMeta">👍 Feedback</div>
+                    </div>
+                    <nav class="articleNavbar">
+                        <h2 class="navbarTitle">In this article</h2>
+                        <ol class="artNavList">
+                            <li class="artNavElem">
+                                <a href="#drawing-clock-hands">Drawing Clock Hands</a>
+                            </li>
+                            <li class="artNavElem">
+                                <a href="#combining-transforms">Combining Transforms</a>
+                            </li>
+                            <li class="artNavElem">
+                                <a href="#next">Next</a>
+                            </li>
+                        </ol>
+                        <p>In Drawing with Direct2D, we saw that the ID2D1RenderTarget::FillEllipse method draws an ellipse that is aligned to the x- and y-axes. But suppose that you want to draw an ellipse tilted at an angle?</p>
+                        <img src="https://learn.microsoft.com/en-us/windows/win32/learnwin32/images/graphics16.png" alt="yellow ellipse">
+                        <p>By using transforms, you can alter a shape in the following ways.
+                        </p>
+                        <ul>
+                            <li>Rotation around a point.
+                            </li>
+                            <li>Scaling.
+                            </li>
+                            <li>Translation (displacement in the X or Y direction).
+                            </li>
+                            <li>Skew (also known as shear).
+                            </li>
+                        </ul>
+                        <p>A transform is a mathematical operation that maps a set of points to a new set of points. For example, the following diagram shows a triangle rotated around the point P3. After the rotation is applied, the point P1 is mapped to P1', the point P2 is mapped to P2', and the point P3 maps to itself.
+                        </p>
+                        <img src="https://learn.microsoft.com/en-us/windows/win32/learnwin32/images/graphics17.png" alt="vectors">
+                        <p>Transforms are implemented by using matrices. However, you do not have to understand the mathematics of matrices in order to use them. If you want to learn more about the math, see Appendix: Matrix Transforms.
+                        </p>
+                        <p>To apply a transform in Direct2D, call the ID2D1RenderTarget::SetTransform method. This method takes a D2D1_MATRIX_3X2_F structure that defines the transformation. You can initialize this structure by calling methods on the D2D1::Matrix3x2F class. This class contains static methods that return a matrix for each kind of transform:
+                        </p>
+                        <ul>
+                            <li>Matrix3x2F::Rotation
+                            </li>
+                            <li>Matrix3x2F::Scale
+                            </li>
+                            <li>Matrix3x2F::Translation
+                            </li>
+                            <li>Matrix3x2F::Skew
+                            </li>
+                        </ul>
+                        <p>For example, the following code applies a 20-degree rotation around the point (100, 100).
+                        </p>
+                        <div class="codeContainer">
+                            <div class="codeHeader">C++</div>
+                            <button># Copy</button>
+                            <code>pRenderTarget->SetTransform(
+                                D2D1::Matrix3x2F::Rotation(20, D2D1::Point2F(100,100)));</code>
+                        </div>
+                        <p>The transform is applied to all later drawing operations until you call SetTransform again. To remove the current transform, call SetTransform with the identity matrix. To create the identity matrix, call the Matrix3x2F::Identity function.
+                        </p>
+                        <div class="codeContainer">
+                            <div class="codeHeader">C++</div>
+                            <button># Copy</button>
+                            <code>pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());</code>
+                        </div>
+                        <h2 id="drawing-clock-hands">Drawing Clock Hands
+                        </h2>
+                        <p>Let's put transforms to use by converting our Circle program into an analog clock. We can do this by adding lines for the hands.
+                        </p>
+                        <img src="https://learn.microsoft.com/en-us/windows/win32/learnwin32/images/graphics18.png" alt="clock">
+                        <p>Instead of calculating the coordinates for the lines, we can calculate the angle and then apply a rotation transform. The following code shows a function that draws one clock hand. The fAngle parameter gives the angle of the hand, in degrees.</p>
+                        <div class="codeContainer">
+                            <div class="codeHeader">C++</div>
+                            <button># Copy</button>
+                            <code>void Scene::DrawClockHand(float fHandLength, float fAngle, float fStrokeWidth)
+                                {
+                                    m_pRenderTarget->SetTransform(
+                                        D2D1::Matrix3x2F::Rotation(fAngle, m_ellipse.point)
+                                            );
+                                
+                                    // endPoint defines one end of the hand.
+                                    D2D_POINT_2F endPoint = D2D1::Point2F(
+                                        m_ellipse.point.x,
+                                        m_ellipse.point.y - (m_ellipse.radiusY * fHandLength)
+                                        );
+                                
+                                    // Draw a line from the center of the ellipse to endPoint.
+                                    m_pRenderTarget->DrawLine(
+                                        m_ellipse.point, endPoint, m_pStroke, fStrokeWidth);
+                                }</code>
+                        </div>
+                        <p>This code draws a vertical line, starting from the center of the clock face and ending at the point endPoint. The line is rotated around the center of the ellipse by applying a rotation transform. The center point for the rotation is the center of ellipse that forms the clock face.</p>
+                        <img src="https://learn.microsoft.com/en-us/windows/win32/learnwin32/images/graphics19.png" alt="rotating">
+                        <p>The following code shows how the whole clock face is drawn.
+                        </p>
+                        <div class="codeContainer">
+                            <div class="codeHeader">C++</div>
+                            <button># Copy</button>
+                            <code>void Scene::RenderScene()
+                                {
+                                    m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));
+                                
+                                    m_pRenderTarget->FillEllipse(m_ellipse, m_pFill);
+                                    m_pRenderTarget->DrawEllipse(m_ellipse, m_pStroke);
+                                
+                                    // Draw hands
+                                    SYSTEMTIME time;
+                                    GetLocalTime(&time);
+                                
+                                    // 60 minutes = 30 degrees, 1 minute = 0.5 degree
+                                    const float fHourAngle = (360.0f / 12) * (time.wHour) + (time.wMinute * 0.5f);
+                                    const float fMinuteAngle =(360.0f / 60) * (time.wMinute);
+                                
+                                    DrawClockHand(0.6f,  fHourAngle,   6);
+                                    DrawClockHand(0.85f, fMinuteAngle, 4);
+                                
+                                    // Restore the identity transformation.
+                                    m_pRenderTarget->SetTransform( D2D1::Matrix3x2F::Identity() );
+                                }</code>
+                        </div>
+                        <p>You can download the complete Visual Studio project from Direct2D Clock Sample. (Just for fun, the download version adds a radial gradiant to the clock face.)
+                        </p>
+                        <h2 id="combining-transforms">Combining Transforms
+                        </h2>
+                        <p>The four basic transforms can be combined by multiplying two or more matrices. For example, the following code combines a rotation with a translation.
+                        </p>
+                        <img src="https://learn.microsoft.com/en-us/windows/win32/learnwin32/images/graphics20.png" alt="translation">
+                        <div class="codeContainer">
+                            <div class="codeHeader">C++</div>
+                            <button># Copy</button>
+                            <code>const D2D1::Matrix3x2F rot = D2D1::Matrix3x2F::Rotation(20);
+                                const D2D1::Matrix3x2F trans = D2D1::Matrix3x2F::Translation(40, 10);
+                                
+                                pRenderTarget->SetTransform(rot * trans);</code>
+                        </div>
+                        <p>The Matrix3x2F class provides operator*() for matrix multiplication. The order in which you multiply the matrices is important. Setting a transform (M × N) means "Apply M first, followed by N." For example, here is rotation followed by translation:
+                        </p>
+                        <p>Here is the code for this transform:
+                        </p>
+                        <div class="codeContainer">
+                            <div class="codeHeader">C++</div>
+                            <button># Copy</button>
+                            <code>const D2D1::Matrix3x2F rot = D2D1::Matrix3x2F::Rotation(45, center);
+                                const D2D1::Matrix3x2F trans = D2D1::Matrix3x2F::Translation(x, 0);
+                                pRenderTarget->SetTransform(rot * trans);
+                                ;</code>
+                        </div>
+                        <p>Now compare that transform with a transform in the reverse order, translation followed by rotation.
+                        </p>
+                        <img src="https://learn.microsoft.com/en-us/windows/win32/learnwin32/images/graphics21.png" alt="rotation">
+                        <p>The rotation is performed around the center of the original rectangle. Here is the code for this transform.
+                        </p>
+                        <p>As you can see, the matrices are the same, but the order of operations has changed. This happens because matrix multiplication is not commutative: M × N ≠ N × M.
+                        </p>
+                        <h2 id="next">Next</h2>
+                        <p>Appendix: Matrix Transforms
+                        </p>
+                        <hr>
+                        <section class="feedbackFooter">
+                            <h2>Feedback</h2>
+                            <p>Was this page helpful?</p>
+                            <button>Yes</button>
+                            <button>No</button>
+                            <div class="feedHelp">
+                                <a href="">Provide product feedback
+                                </a>
+                                <span class="dividerSmall">|</span>
+                                <a href="">Get help at Microsoft Q&A
+                                </a>
+                            </div>
+                        </section>
+                    </nav>
             </div>
         </div>
         <div class="additionals">
-            <div class="resources"></div>
-            <div class="resourceBlock"></div>
-            <div class="resourceBlock"></div>
-            <div class="showMore"></div>
+            <h2 class="resources">Additional resources</h2>
+            <div class="documentation">Documentation</div>
+            <div class="resourcesListContainer">
+                <ul class="resourcesListUl">
+                    <li class="resourceLi">
+                        <a href="#" class="resLink">Appendix Matrix Transforms - Win32 apps</a>
+                        <p class="resText">This topic provides a mathematical overview of matrix transforms for 2-D graphics.</p>
+                    </li>
+                    <li class="resourceLi">
+                        <a href="#" class="resLink">Using Color in Direct2D - Win32 apps</a>
+                        <p class="resText">Using Color in Direct2D</p>
+                    </li>
+                    <li class="resourceLi">
+                        <a href="#" class="resLink">Drawing with Direct2D - Win32 apps</a>
+                        <p class="resText">After you create your graphics resources, you are ready to draw.</p>
+                    </li>
+                    <li class="resourceLi">
+                        <a href="#" class="resLink">Render Targets, Devices, and Resources - Win32 apps</a>
+                        <p class="resText">Render Targets, Devices, and Resources</p>
+                    </li>
+                    <li class="resourceLi">
+                        <a href="#" class="resLink">Your First Direct2D Program - Win32 apps</a>
+                        <p class="resText">Let's create our first Direct2D program. The program does not do anything fancy \ 8212; it just draws a circle that fills the client area of the window. But this program introduces many essential Direct2D concepts.</p>
+                    </li>
+                    <li class="resourceLi">
+                        <a href="#" class="resLink">Direct2D Circle Sample - Win32 apps</a>
+                        <p class="resText">This sample application shows how to draw a circle using Direct2D.</p>
+                    </li>
+                    <li class="resourceLi">
+                        <a href="#" class="resLink">Direct2D Clock Sample - Win32 apps</a>
+                        <p class="resText">This sample application shows how to use transforms in Direct2D to draw the hands of a clock.</p>
+                    </li>
+                    <li class="resourceLi">
+                        <a href="#" class="resLink">Overview of the Windows Graphics Architecture - Win32 apps</a>
+                        <p class="resText">Describes the C++/COM graphics APIs in Windows.</p>
+                    </li>
+                </ul>
+                <button class="showMore">Show 5 more</button>
+            </div>
         </div>
     </div>
     <div class="footer"></div>
