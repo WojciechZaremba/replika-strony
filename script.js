@@ -246,6 +246,21 @@ function adjustBreadcrumb() {
     }
 }
 
+// BUTTONS
+const showButton = document.querySelector(".showMore")
+const resourcesList = document.querySelector(".resourcesListUl")
+let ariaExpanded = false
+
+function handleShowButton() {
+    ariaExpanded = !ariaExpanded
+    for (let i = 3; i < resourcesList.children.length; i++) {
+        resourcesList.children[i].classList.toggle("hidden")
+    }
+    showButton.textContent = ariaExpanded ? "Show less" : "Show 5 more"
+    const diff = window.innerHeight - additionals.clientHeight
+    additionals.style.top = diff < 0 ? `${diff}px` : `${0}px`
+}
+
 // OTHER
 
 function shouldResize(n = 0) {
@@ -275,7 +290,6 @@ onresize = () =>  {
     adjustBreadcrumb()
 }
     
-
 onscroll = adjustColumnsHeight
 
 rightArrow.addEventListener("click", (e) => handleNavbarArrows(e))

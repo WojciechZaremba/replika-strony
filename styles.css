@@ -544,11 +544,21 @@ ul.resourcesListUl li p {
     overflow: hidden;
     color: #d2d2d2;
 }
-ul.resourcesListUl li a {
+ul.resourcesListUl li a, .showMore {
     line-height: 1.3;
     text-decoration: none;
     color: #75b6e7;
     font-weight: 600;
+}
+.showMore {
+    background: none;
+    border: none;
+    padding-left: 0;
+}
+.showMore:hover, ul.resourcesListUl li a:hover {
+    cursor: pointer;
+    color: #278cda;
+    text-decoration: underline;
 }
 ul.resourcesListUl li a:visited {
     color: #ac7ee1;
