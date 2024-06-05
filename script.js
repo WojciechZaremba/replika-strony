@@ -1,6 +1,7 @@
 const body = document.getElementsByTagName("body")[0]
 
 // LOWER EXPANDER ADJUSTMENTS ("MORE" BUTTON):
+
 const dashboard = document.getElementsByClassName("dashboard")[0]
 const expBot = document.getElementsByClassName("expBot")[0]
 
@@ -209,7 +210,7 @@ for (let chapter of colChapters) {
 const breadcrumb = document.querySelector(".breadcrumb")
 const article = document.querySelector(".article")
 
-const dots = document.querySelector(".breadSummary")
+const dots = document.querySelector(".detailsContainer")
 
 dots.style.display = "none"
 
@@ -219,44 +220,55 @@ let lastRemoved = undefined
 
 const widthArray = []
 
-function adjustBreadcrumb() {
+function adjustBreadcrumb(n = 0) {
+    if (n >= 6) return
     console.log("breadcrumb width",breadcrumb.clientWidth)
-    if (breadcrumb.clientWidth > article.clientWidth * 0.85) {
+    if (breadcrumb.clientWidth - 4 > article.clientWidth * 0.7) { // -4 to count padding
         console.log("REMOVE")
+        console.log("article width * 0.7", article.clientWidth * 0.7)
+        
         lastRemoved = breadcrumb.childNodes[i]
         lastWidth = lastRemoved.clientWidth
+        console.log("diff:",breadcrumb.clientWidth - lastWidth)
         console.log("last width",lastWidth)
         widthArray.unshift(lastWidth)
         lastRemoved.style.display = "none"
         dots.style.display = ""
         i += 2
+        adjustBreadcrumb(++n)
     } 
-    else if (breadcrumb.clientWidth + widthArray[0] < article.clientWidth * 0.8) {
+    else if (breadcrumb.clientWidth + widthArray[0]  < article.clientWidth * 0.7) {
         console.log("ADD")
         console.log("bread width", breadcrumb.clientWidth)
         console.log("last width", lastWidth)
         console.log("sum:",breadcrumb.clientWidth + lastWidth)
-        console.log("article width * 0.85", article.clientWidth * 0.85)
+        console.log("article width * 0.7", article.clientWidth * 0.7)
         i -= 2
         lastRemoved = breadcrumb.childNodes[i]
         lastRemoved.style.display = ""
         widthArray.shift()
         lastWidth = widthArray[0]
         if (widthArray.length === 0) dots.style.display = "none"
+        adjustBreadcrumb(++n)
     }
 }
 
 // BUTTONS
-const showButton = document.querySelector(".showMore")
-const resourcesList = document.querySelector(".resourcesListUl")
+
+const showButton = document.querySelectorAll(".showMore")
+const resourcesList = document.querySelectorAll(".resourcesListUl")
 let ariaExpanded = false
 
 function handleShowButton() {
+    console.log("handleShowButton fun")
     ariaExpanded = !ariaExpanded
-    for (let i = 3; i < resourcesList.children.length; i++) {
-        resourcesList.children[i].classList.toggle("hidden")
+    for (let i = 3; i < resourcesList[0].children.length; i++) {
+        resourcesList[0].children[i].classList.toggle("hidden")
+        resourcesList[1].children[i].classList.toggle("hidden")
     }
-    showButton.textContent = ariaExpanded ? "Show less" : "Show 5 more"
+    // showButton.forEach(button => button.textContent = ariaExpanded ? "Show less test" : "Show 5 more test")
+    showButton[0].textContent = ariaExpanded ? "Show less" : "Show 5 more"
+    showButton[1].textContent = ariaExpanded ? "Show less" : "Show 5 more"
     const diff = window.innerHeight - additionals.clientHeight
     additionals.style.top = diff < 0 ? `${diff}px` : `${0}px`
 }
@@ -264,7 +276,8 @@ function handleShowButton() {
 // OTHER
 
 function shouldResize(n = 0) {
-    if (n >= 10) throw new Error('something went wrong');
+    console.log(body.scrollWidth , body.clientWidth)
+    if (n >= 15) throw new Error('something went wrong');
     if (body.scrollWidth > body.clientWidth) {
         adjustLastExpanderLower()
         adjustLastExpanderUpper()
@@ -273,9 +286,82 @@ function shouldResize(n = 0) {
     }
 }
 
+function handleClickAll(e) {
+    closeExpandersTop(e)
+    closeDetails(e)
+    function closeExpandersTop(e) {
+        const topExpanders = document.querySelectorAll(".expElemTop")
+        const openExpanders = Array.from(topExpanders).some(exp => exp.classList.contains("activeTop"))
+        if (openExpanders === false) return
+        console.log("closer")
+        let elem = e.target
+        while (elem !== body) { // replace this with a .contains()?
+            if (Array.from(topExpanders).indexOf(elem) > -1) {
+                return
+            }
+            elem = elem.parentElement
+        }
+        topExpanders.forEach(exp => {
+            exp.querySelector(".headerPanel").classList.add("hidden")
+            exp.classList.remove("activeTop")
+        })
+    }
+    function closeDetails(e) {
+        const details = document.querySelector("details")
+        if (details.open === false) return
+        let elem = e.target
+        while (elem !== body) {
+            if (elem === details) return 
+            elem = elem.parentElement
+        }
+        document.querySelector("details").open = false
+    }
+}
+
+function upperButtonHander(e) {
+    console.log("tar",e.target)
+    console.log("curtar",e.currentTarget)
+    
+    let current = e.target
+    while (current !== e.currentTarget) { // do nothing when a panel is clicked
+        if (current.classList.contains("headerPanel")) return
+        current = current.parentElement
+    }
+
+    document.querySelectorAll(".expElemTop").forEach(elem => {
+        if (elem !== e.currentTarget && elem.contains(e.currentTarget) === false) {
+            elem.querySelector(".headerPanel").classList.add("hidden")
+            elem.classList.remove("activeTop")
+        }
+    })
+    console.log("toggls")
+    e.currentTarget.querySelector(".headerPanel").classList.toggle("hidden")
+    e.currentTarget.classList.toggle("activeTop")
+}
+
+const code = document.querySelectorAll("code") 
+
+function codeFormatting() {
+    code.forEach(piece => {
+        // piece.innerHTML = piece.innerHTML.replace(/\/\/(.*)/g, '<span class="comment">$&</span>')
+        // piece.innerHTML = piece.innerHTML.replace(/const|void|float/g, '<span class="keyword">$&</span>')
+        // piece.innerHTML = piece.innerHTML.replace(/(?<!\w)\d+(\.\d+f)?(?!\w)/g, '<span class="number">$&</span>')
+
+        piece.innerHTML = piece.innerHTML.replace(
+            /\/\/(.*)|\b(const|void|float)\b|(?<!\w)\d+(\.\d+f)?(?!\w)/g,
+            // /\/\/(.*)|(\b(?:const|void|float)\b)|(?<!\w)\d+(\.\d+f)?(?!\w)/g,
+            (match, p1, p2, p3, p4) => {
+                return `<span class="${p1 ? "comment" : p2 ? "keyword" : p3 ? "number" : p4 ? "number" : ""}">${match}</span>`
+            }
+        )
+    } )
+}
+
+codeFormatting()
+
 onload = () => {
     try { 
-        shouldResize()
+        // shouldResize()
         adjustColumnsHeight()
         document.querySelector(".activeContent").scrollIntoView()
         adjustBreadcrumb()
@@ -294,6 +380,12 @@ onscroll = adjustColumnsHeight
 
 rightArrow.addEventListener("click", (e) => handleNavbarArrows(e))
 leftArrow.addEventListener("click", (e) => handleNavbarArrows(e))
+
+window.addEventListener("click", (e) => handleClickAll(e))
+
+document.querySelectorAll(".expElemTop").forEach(btn => {
+    btn.addEventListener("click", (e) => upperButtonHander(e))
+})
 
 // // UPPER EXPANDER ADJUSTMENTS (ARROWS):
 // const search = document.getElementsByClassName("searchButton")[0]
