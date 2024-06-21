@@ -8,48 +8,123 @@ const expBot = document.getElementsByClassName("expBot")[0]
 // console.log(expBot.lastElementChild.clientWidth)
 
 const removedNodesDown = []
+ 
+// AN OLD "MORE EXPANDER" CODE:
+//
+// \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
+// const moreExpander = document.createElement("div")
+// const moreTxt = document.createTextNode("More")
+// const moreArrow = document.createElement("span")
+// moreExpander.classList.add("expanderElement", "expElemBot")
+// moreArrow.classList.add("expandIndicator")
+// moreExpander.setAttribute("id", "more")
+// moreExpander.append(moreTxt, moreArrow)
 
-const moreExpander = document.createElement("div")
-const moreTxt = document.createTextNode("More")
-const moreArrow = document.createElement("span")
-moreExpander.classList.add("expanderElement", "expElemBot")
-moreArrow.classList.add("expandIndicator")
-moreExpander.setAttribute("id", "more")
-moreExpander.append(moreTxt, moreArrow)
+// const moreList = document.createElement("ul")
+// // moreList.setAttribute("style", "position: absolute")
+// moreList.classList.add("moreList")
+// moreExpander.append(moreList)
 
-function adjustLastExpanderLower() {
-    if (hiddenNodes.left.length > 0) {
-        console.log("do sth")
-        handleNavbarArrows("dummy")
-    }
-    const dashMargin = getComputedStyle(dashboard).getPropertyValue("margin-left")
-    const marginNum = Number(dashMargin.slice(0, -2))
+// moreExpander.addEventListener("click", () => {
+//     moreList.classList.toggle("hidden")
 
-    const nodeLast = expBot.lastElementChild
-    const nodeWidth = nodeLast?.clientWidth
-    const prevSibl = nodeLast.previousElementSibling
-    const prevWidth = prevSibl?.clientWidth
-    const lastRemoved = removedNodesDown[removedNodesDown.length - 1]?.[0]
-    const lastRemovedWidth = removedNodesDown[removedNodesDown.length - 1]?.[1]
+//     console.log(removedNodesDown.length)
+//     createMoreList()
+// })
 
-    if (marginNum === 0) {
-        if (nodeLast.id === "more" && prevSibl) {
-            removedNodesDown.push([prevSibl, prevWidth])
-            expBot.removeChild(prevSibl)
-        } else if (nodeLast.id !== "more") {
-            removedNodesDown.push([nodeLast, nodeWidth])
-            expBot.removeChild(nodeLast)
-            expBot.appendChild(moreExpander)
+// function createMoreList() {
+//     moreList.innerHTML = ""
+//     for (let node of removedNodesDown) {
+//         console.log(node[0].childNodes[0].data)
+//         // const ul = document.createElement("ul")
+//         // ul.innerText = node[0].childNodes[0].data
+//         // moreList.appendChild(ul)
+//     }
+// }
+// /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
+
+// AN OLD ADJUSTER THAT WORKS WITH THE OLD "MORE EXPANDER"
+//
+// \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
+// function adjustLastExpanderLower() {
+// // console.log("do sth")
+//     if (hiddenNodes.left.length > 0) { // TODO: maybe move it somewhere else
+//         handleNavbarArrows("dummy")
+//     }
+//     const dashMargin = getComputedStyle(dashboard).getPropertyValue("margin-left")
+//     const marginNum = Number(dashMargin.slice(0, -2))
+
+//     const nodeLast = expBot.lastElementChild
+//     const nodeWidth = nodeLast?.clientWidth
+//     const prevSibl = nodeLast.previousElementSibling
+//     const prevWidth = prevSibl?.clientWidth
+//     const lastRemoved = removedNodesDown[removedNodesDown.length - 1]?.[0]
+//     const lastRemovedWidth = removedNodesDown[removedNodesDown.length - 1]?.[1]
+
+//     if (marginNum === 0) {
+//         if (nodeLast.id === "more" && prevSibl) {
+//             removedNodesDown.push([prevSibl, prevWidth])
+//             expBot.removeChild(prevSibl)
+//         } else if (nodeLast.id !== "more") {
+//             removedNodesDown.push([nodeLast, nodeWidth])
+//             expBot.removeChild(nodeLast)
+//             expBot.appendChild(moreExpander)
+//         }
+//     } else if (marginNum > 0 && marginNum > lastRemovedWidth && removedNodesDown.length >= 2) {
+//             expBot.insertBefore(lastRemoved, nodeLast)
+//             removedNodesDown.pop()
+//     } else if (removedNodesDown.length < 2 && marginNum > lastRemovedWidth - 66 ) { // 66 is a "more" elem length in px
+//         if (nodeLast.id === "more") expBot.removeChild(nodeLast)
+//         expBot.appendChild(lastRemoved)
+//         removedNodesDown.pop()
+//     }
+// }
+// /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
+
+let previouslyRemovedWidth = []
+
+function adjustLastExpanderLower(e) {
+    console.log("previouslyRemovedWidth: ", previouslyRemovedWidth)
+
+    const buttons = expBot.children
+    const moreButton = document.querySelector("#moreButton")
+    const dashMargin = Number(getComputedStyle(dashboard).getPropertyValue("margin-left").slice(0, -2))
+    let lastVisible = buttons[0]
+
+    let lastIdx = NaN
+    
+    console.log("dashMargin before: ", dashMargin)
+    console.log(buttons[4].clientWidth)
+    
+    for (let i = 0; i <= buttons.length - 1; i++) {
+        const display = getComputedStyle(buttons[i]).getPropertyValue("display")
+        const width = buttons[i].clientWidth
+        const id = buttons[i].id
+        console.log(i, display, width, id)
+        if (display === "flex" && id !== "moreButton") {
+            lastVisible = buttons[i]
+            lastIdx = i
         }
-    } else if (marginNum > 0 && marginNum > lastRemovedWidth && removedNodesDown.length >= 2) {
-            expBot.insertBefore(lastRemoved, nodeLast)
-            removedNodesDown.pop()
-    } else if (removedNodesDown.length < 2 && marginNum > lastRemovedWidth - 66 ) { // 66 is a "more" elem length in px
-        if (nodeLast.id === "more") expBot.removeChild(nodeLast)
-        expBot.appendChild(lastRemoved)
-        removedNodesDown.pop()
     }
+    if (dashMargin <= 0) {
+        console.log("now")
+        previouslyRemovedWidth.push(lastVisible.clientWidth)
+        lastVisible.style.display = "none"
+        moreButton.style.display = "flex"
+    } else if (dashMargin > previouslyRemovedWidth[previouslyRemovedWidth.length - 1] 
+                && previouslyRemovedWidth.length > 1 ) {
+        buttons[lastIdx + 1].style.display = "flex"
+        previouslyRemovedWidth.pop()
+        console.log(buttons)
+    } else if (dashMargin + 66 > previouslyRemovedWidth[0] && previouslyRemovedWidth.length === 1) {
+        buttons[lastIdx + 1].style.display = "flex"
+        previouslyRemovedWidth.pop()
+    }
+    if (previouslyRemovedWidth.length <= 0) moreButton.style.display = "none"
+    const dashMarginAfter = Number(getComputedStyle(dashboard).getPropertyValue("margin-left").slice(0, -2))
+    if (dashMarginAfter <= 0) adjustLastExpanderLower()
 }
+window.onload = adjustLastExpanderLower
 
 // UPPER EXPANDER ADJUSTMENTS (ARROWS):
 
@@ -222,15 +297,15 @@ const widthArray = []
 
 function adjustBreadcrumb(n = 0) {
     if (n >= 6) return
-    console.log("breadcrumb width",breadcrumb.clientWidth)
+//    console.log("breadcrumb width",breadcrumb.clientWidth)
     if (breadcrumb.clientWidth - 4 > article.clientWidth * 0.7) { // -4 to count padding
-        console.log("REMOVE")
-        console.log("article width * 0.7", article.clientWidth * 0.7)
+        // console.log("REMOVE")
+        // console.log("article width * 0.7", article.clientWidth * 0.7)
         
         lastRemoved = breadcrumb.childNodes[i]
         lastWidth = lastRemoved.clientWidth
-        console.log("diff:",breadcrumb.clientWidth - lastWidth)
-        console.log("last width",lastWidth)
+        // console.log("diff:",breadcrumb.clientWidth - lastWidth)
+        // console.log("last width",lastWidth)
         widthArray.unshift(lastWidth)
         lastRemoved.style.display = "none"
         dots.style.display = ""
@@ -238,11 +313,11 @@ function adjustBreadcrumb(n = 0) {
         adjustBreadcrumb(++n)
     } 
     else if (breadcrumb.clientWidth + widthArray[0]  < article.clientWidth * 0.7) {
-        console.log("ADD")
-        console.log("bread width", breadcrumb.clientWidth)
-        console.log("last width", lastWidth)
-        console.log("sum:",breadcrumb.clientWidth + lastWidth)
-        console.log("article width * 0.7", article.clientWidth * 0.7)
+        // console.log("ADD")
+        // console.log("bread width", breadcrumb.clientWidth)
+        // console.log("last width", lastWidth)
+        // console.log("sum:",breadcrumb.clientWidth + lastWidth)
+        // console.log("article width * 0.7", article.clientWidth * 0.7)
         i -= 2
         lastRemoved = breadcrumb.childNodes[i]
         lastRemoved.style.display = ""
@@ -263,8 +338,8 @@ function handleShowButton() {
     console.log("handleShowButton fun")
     ariaExpanded = !ariaExpanded
     for (let i = 3; i < resourcesList[0].children.length; i++) {
-        resourcesList[0].children[i].classList.toggle("hidden")
         resourcesList[1].children[i].classList.toggle("hidden")
+        resourcesList[0].children[i].classList.toggle("hidden")
     }
     // showButton.forEach(button => button.textContent = ariaExpanded ? "Show less test" : "Show 5 more test")
     showButton[0].textContent = ariaExpanded ? "Show less" : "Show 5 more"
@@ -318,25 +393,27 @@ function handleClickAll(e) {
     }
 }
 
-function upperButtonHander(e) {
-    console.log("tar",e.target)
-    console.log("curtar",e.currentTarget)
-    
-    let current = e.target
-    while (current !== e.currentTarget) { // do nothing when a panel is clicked
+function upperButtonHandler(e) {
+    // do nothing when a panel is clicked
+    let current = e.target 
+    while (current !== e.currentTarget) { 
         if (current.classList.contains("headerPanel")) return
         current = current.parentElement
     }
-
+    // hide previously opened panels 
     document.querySelectorAll(".expElemTop").forEach(elem => {
-        if (elem !== e.currentTarget && elem.contains(e.currentTarget) === false) {
+        if (elem !== e.currentTarget) {
             elem.querySelector(".headerPanel").classList.add("hidden")
             elem.classList.remove("activeTop")
         }
     })
-    console.log("toggls")
+    // toggle panel visibility of a clicked button
     e.currentTarget.querySelector(".headerPanel").classList.toggle("hidden")
     e.currentTarget.classList.toggle("activeTop")
+}
+
+function bottomButtonHandler(e) {
+    upperButtonHandler(e)
 }
 
 const code = document.querySelectorAll("code") 
@@ -365,6 +442,7 @@ onload = () => {
         adjustColumnsHeight()
         document.querySelector(".activeContent").scrollIntoView()
         adjustBreadcrumb()
+        adjustLastExpanderLower()
      } 
     catch (e) { console.error(e) }
 }
@@ -384,7 +462,10 @@ leftArrow.addEventListener("click", (e) => handleNavbarArrows(e))
 window.addEventListener("click", (e) => handleClickAll(e))
 
 document.querySelectorAll(".expElemTop").forEach(btn => {
-    btn.addEventListener("click", (e) => upperButtonHander(e))
+    btn.addEventListener("click", (e) => upperButtonHandler(e))
+})
+document.querySelectorAll(".expElemBot").forEach(btn => {
+    btn.addEventListener("click", (e) => bottomButtonHandler(e))
 })
 
 // // UPPER EXPANDER ADJUSTMENTS (ARROWS):

@@ -211,6 +211,7 @@ body {
     white-space: nowrap;
 }
 .expElemBot {
+    position: relative;
     padding: 0 8px;
     /* background-color: gray; */
     line-height: normal;
@@ -233,6 +234,27 @@ body {
     border-right: none;
     transform: rotate(-45deg);
 }
+
+.expanderList {
+    padding: 0;
+    margin: 0;
+    z-index: 1;
+    position: absolute;
+    top: 3.375rem;
+    width: 100px;
+    height: auto;
+    background-color: gray;
+}
+ul.expanderList li {
+    background-color: darkred;
+    }
+ul.expanderList li * {
+    background-color: darkgreen;
+}
+
+
+
+
 .rotateToRight {
     transform: rotate(270deg);
 }
