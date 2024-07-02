@@ -84,30 +84,31 @@ const removedNodesDown = []
 let previouslyRemovedWidth = []
 
 function adjustLastExpanderLower(e) {
-    console.log("previouslyRemovedWidth: ", previouslyRemovedWidth)
-
+    // console.log("previouslyRemovedWidth: ", previouslyRemovedWidth)
+    
     const buttons = expBot.children
+    console.log(buttons)
     const moreButton = document.querySelector("#moreButton")
     const dashMargin = Number(getComputedStyle(dashboard).getPropertyValue("margin-left").slice(0, -2))
     let lastVisible = buttons[0]
 
     let lastIdx = NaN
     
-    console.log("dashMargin before: ", dashMargin)
-    console.log(buttons[4].clientWidth)
+    // console.log("dashMargin before: ", dashMargin)
+    // console.log(buttons[4].clientWidth)
     
     for (let i = 0; i <= buttons.length - 1; i++) {
         const display = getComputedStyle(buttons[i]).getPropertyValue("display")
         const width = buttons[i].clientWidth
         const id = buttons[i].id
-        console.log(i, display, width, id)
+        // console.log(i, display, width, id)
         if (display === "flex" && id !== "moreButton") {
             lastVisible = buttons[i]
             lastIdx = i
         }
     }
     if (dashMargin <= 0) {
-        console.log("now")
+        // console.log("now")
         previouslyRemovedWidth.push(lastVisible.clientWidth)
         lastVisible.style.display = "none"
         moreButton.style.display = "flex"
@@ -115,7 +116,7 @@ function adjustLastExpanderLower(e) {
                 && previouslyRemovedWidth.length > 1 ) {
         buttons[lastIdx + 1].style.display = "flex"
         previouslyRemovedWidth.pop()
-        console.log(buttons)
+        // console.log(buttons)
     } else if (dashMargin + 66 > previouslyRemovedWidth[0] && previouslyRemovedWidth.length === 1) {
         buttons[lastIdx + 1].style.display = "flex"
         previouslyRemovedWidth.pop()
@@ -125,6 +126,24 @@ function adjustLastExpanderLower(e) {
     if (dashMarginAfter <= 0) adjustLastExpanderLower()
 }
 window.onload = adjustLastExpanderLower
+
+function adjustMoreExpander() {
+    const moreButton = document.querySelector("#moreButton")
+    const moreDropdown = moreButton.querySelectorAll(".moreDropdown")
+
+    for (let i = 0; i < expBot.children.length - 1; i++) {
+        console.log(i)
+        console.log(getComputedStyle(expBot.children[i]).display)
+        if (getComputedStyle(expBot.children[i]).display === "none") {
+            moreDropdown[i].style.display = "flex"
+        } else if (getComputedStyle(expBot.children[i]).display === "flex") {
+            moreDropdown[i].style.display = "none"
+        }
+    }
+
+    console.log(expBot.children)
+    console.log(moreButton.children)
+}
 
 // UPPER EXPANDER ADJUSTMENTS (ARROWS):
 
@@ -398,6 +417,7 @@ function upperButtonHandler(e) {
     let current = e.target 
     while (current !== e.currentTarget) { 
         if (current.classList.contains("headerPanel")) return
+        if (current.classList.contains("expanderList")) return
         current = current.parentElement
     }
     // hide previously opened panels 
@@ -407,13 +427,24 @@ function upperButtonHandler(e) {
             elem.classList.remove("activeTop")
         }
     })
+    document.querySelectorAll(".expElemBot").forEach(elem => {
+        if (elem !== e.currentTarget) {
+            elem.querySelector(".expanderList")?.classList.add("hidden")
+            elem.classList.remove("activeTop")
+        }
+    })
     // toggle panel visibility of a clicked button
-    e.currentTarget.querySelector(".headerPanel").classList.toggle("hidden")
+    e.currentTarget.querySelector(".headerPanel")?.classList.toggle("hidden")
+    e.currentTarget.querySelector(".expanderList")?.classList.toggle("hidden")
     e.currentTarget.classList.toggle("activeTop")
 }
 
 function bottomButtonHandler(e) {
     upperButtonHandler(e)
+    adjustMoreExpander()
+    console.log(e.currentTarget)
+
+
 }
 
 const code = document.querySelectorAll("code") 
@@ -452,6 +483,7 @@ onresize = () =>  {
     adjustLastExpanderUpper()
     spaceWarning()
     adjustBreadcrumb()
+    adjustMoreExpander()
 }
     
 onscroll = adjustColumnsHeight

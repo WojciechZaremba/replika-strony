@@ -173,7 +173,7 @@
             <div class="navbarBigButton">Windows App Development</div>
             <div class="expanders expBot">
                 <div class="expanderElement expElemBot">Explore<span class="expandIndicator expIndSmall"></span>
-                    <ul class="expanderList"style="display: none">
+                    <ul class="expanderList hidden">
                         <li>Desktop app types</li>
                         <li>Windows App SDK</li>
                         <li>Windows UI Library</li>
@@ -181,16 +181,16 @@
                     </ul>
                 </div>
                 <div class="expanderElement expElemBot">Development<span class="expandIndicator expIndSmall"></span>
-                    <ul class="expanderList"style="display: none">
+                    <ul class="expanderList hidden">
                         <li>Get started</li>
                         <li>Design</li>
                         <li>Develop</li>
                         <li>Deploy</li>
-                        <li>samples</li>
+                        <li>Samples</li>
                         </ul>
                 </div>
-                <div class="expanderElement expElemBot">Platforms<span class="expandIndicatoer expIndSmall"></span>
-                    <ul class="expanderList"style="display: none">
+                <div class="expanderElement expElemBot">Platforms<span class="expandIndicator expIndSmall"></span>
+                    <ul class="expanderList hidden">
                         <li><button>Desktop apps</button>
                             <ul>
                                 <li>WinUI 3</li>
@@ -201,13 +201,14 @@
                             </ul>
                         </li>
                         <li>Web</li>
-                        <li>Mised Reality</li>
+                        <li>Windows IoT</li>
+                        <li>Mixed Reality</li>
                         <li>Games</li>
                     </ul>
                 </div>
                 <div class="expanderElement expElemBot">Troubleshooting</div>
                 <div class="expanderElement expElemBot">Resources<span class="expandIndicator expIndSmall"></span>
-                    <ul class="expanderList" style="display: none">
+                    <ul class="expanderList hidden">
                         <li>Downloads</li>
                         <li>Windows Dev Center</li>
                         <li>Windows developer support</li>
@@ -219,10 +220,16 @@
                         <li>Windows Developer on Twitter</li>
                     </ul>
                 </div>
-                <div class="expanderElement expElemBot" id="moreButton" style="display: none">More<span class="expandIndicator expIndSmall"></span>   
-                    <ul class="expanderList">
-                       <li><button>Resources</button>
-                            <ul>
+                
+                <div class="expanderElement expElemBot" id="moreButton">More<span class="expandIndicator expIndSmall"></span>   
+                    <ul class="expanderList hidden">
+                        <li class="moreDropdown"><button>Explore</button></li>
+                        <li class="moreDropdown"><button>Development</button></li>
+                        <li class="moreDropdown"><button>Platrofms</button></li>
+                        <li class="moreDropdown">Troubleshooting</li>
+                        <li class="moreDropdown"><button>Resources</button></li>
+                        <!-- <li><button>Resources</button>
+                            <ul class="hidden">
                                 <li>Downloads</li>
                                 <li>Windows Dev Center</li>
                                 <li>Windows developer support</li>
@@ -234,7 +241,7 @@
                                 <li>Windows Developer on Twitter</li>
                             </ul>
                         </li>
-                        <li>Troubleshooting</li>
+                        <li>Troubleshooting</li> -->
                         <!-- <li style="display: none"><button>Platforms</button>
                             <ul>
                                 <li><button>Desktop apps</button>

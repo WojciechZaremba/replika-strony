@@ -235,18 +235,27 @@ body {
     transform: rotate(-45deg);
 }
 
-.expanderList {
+ul.expanderList {
+    box-sizing: content-box;
+    list-style: none;
+    left: 0;
+    top: -2px;
     padding: 0;
+    padding-bottom: 8px;
     margin: 0;
     z-index: 1;
     position: absolute;
     top: 3.375rem;
-    width: 100px;
+    width: auto;
     height: auto;
-    background-color: gray;
+    background-color: #2f2f2f;
+    border: 1px solid #404040;
+    border-top: none;
 }
 ul.expanderList li {
-    background-color: darkred;
+    line-height: 21px;
+    padding: 8px 16px;
+
     }
 ul.expanderList li * {
     background-color: darkgreen;
