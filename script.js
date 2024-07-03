@@ -140,9 +140,8 @@ function adjustMoreExpander() {
             moreDropdown[i].style.display = "none"
         }
     }
-
-    console.log(expBot.children)
-    console.log(moreButton.children)
+    // console.log(expBot.children)
+    // console.log(moreButton.children)
 }
 
 // UPPER EXPANDER ADJUSTMENTS (ARROWS):
@@ -382,23 +381,38 @@ function shouldResize(n = 0) {
 
 function handleClickAll(e) {
     closeExpandersTop(e)
+    closeExpandersBottom(e)
     closeDetails(e)
     function closeExpandersTop(e) {
         const topExpanders = document.querySelectorAll(".expElemTop")
         const openExpanders = Array.from(topExpanders).some(exp => exp.classList.contains("activeTop"))
         if (openExpanders === false) return
-        console.log("closer")
+        console.log("closer top")
         let elem = e.target
         while (elem !== body) { // replace this with a .contains()?
-            if (Array.from(topExpanders).indexOf(elem) > -1) {
-                return
-            }
+            if (Array.from(topExpanders).indexOf(elem) > -1) return
             elem = elem.parentElement
         }
         topExpanders.forEach(exp => {
             exp.querySelector(".headerPanel").classList.add("hidden")
             exp.classList.remove("activeTop")
         })
+    }
+    function closeExpandersBottom(e) {
+            const botExpanders = document.querySelectorAll(".expElemBot")
+            const openExpanders = Array.from(botExpanders).some(exp => exp.classList.contains("activeTop")) // it should be "activeBot" or sth like that
+            if (openExpanders === false) return
+            console.log("closer bot")
+            let elem = e.target
+            while (elem !== body) {
+                if (Array.from(botExpanders).indexOf(elem) > -1) return
+                elem = elem.parentElement
+            }
+            botExpanders.forEach(exp => {
+                exp.querySelector(".expanderList")?.classList.add("hidden")
+                exp.classList.remove("activeTop")
+            })
+             
     }
     function closeDetails(e) {
         const details = document.querySelector("details")
@@ -434,7 +448,7 @@ function upperButtonHandler(e) {
         }
     })
     // toggle panel visibility of a clicked button
-    e.currentTarget.querySelector(".headerPanel")?.classList.toggle("hidden")
+    // e.currentTarget.querySelector(".headerPanel")?.classList.toggle("hidden") // don't need it since I use expanderList class in both navbars
     e.currentTarget.querySelector(".expanderList")?.classList.toggle("hidden")
     e.currentTarget.classList.toggle("activeTop")
 }
@@ -442,7 +456,7 @@ function upperButtonHandler(e) {
 function bottomButtonHandler(e) {
     upperButtonHandler(e)
     adjustMoreExpander()
-    console.log(e.currentTarget)
+    // console.log(e.currentTarget)
 
 
 }
