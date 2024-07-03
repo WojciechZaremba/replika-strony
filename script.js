@@ -87,7 +87,7 @@ function adjustLastExpanderLower(e) {
     // console.log("previouslyRemovedWidth: ", previouslyRemovedWidth)
     
     const buttons = expBot.children
-    console.log(buttons)
+    // console.log(buttons)
     const moreButton = document.querySelector("#moreButton")
     const dashMargin = Number(getComputedStyle(dashboard).getPropertyValue("margin-left").slice(0, -2))
     let lastVisible = buttons[0]
@@ -113,7 +113,7 @@ function adjustLastExpanderLower(e) {
         lastVisible.style.display = "none"
         moreButton.style.display = "flex"
     } else if (dashMargin > previouslyRemovedWidth[previouslyRemovedWidth.length - 1] 
-                && previouslyRemovedWidth.length > 1 ) {
+                && previouslyRemovedWidth.length > 1) {
         buttons[lastIdx + 1].style.display = "flex"
         previouslyRemovedWidth.pop()
         // console.log(buttons)
@@ -123,7 +123,28 @@ function adjustLastExpanderLower(e) {
     }
     if (previouslyRemovedWidth.length <= 0) moreButton.style.display = "none"
     const dashMarginAfter = Number(getComputedStyle(dashboard).getPropertyValue("margin-left").slice(0, -2))
-    if (dashMarginAfter <= 0) adjustLastExpanderLower()
+    // if (dashMarginAfter <= 0 || (dashMarginAfter + 66 > previouslyRemovedWidth[0] && previouslyRemovedWidth.length >= 1)) {
+    console.log(previouslyRemovedWidth[previouslyRemovedWidth.length - 1] < dashMarginAfter + 66)
+    if (dashMarginAfter <= 0) {
+        adjustLastExpanderLower()
+    } else if (dashMarginAfter > previouslyRemovedWidth[previouslyRemovedWidth.length - 1] 
+        && previouslyRemovedWidth.length > 1) {
+        adjustLastExpanderLower()
+    } else if (dashMarginAfter + 66 > previouslyRemovedWidth[0] && previouslyRemovedWidth.length === 1) {
+        adjustLastExpanderLower()
+    }
+    console.log(previouslyRemovedWidth[0], dashMarginAfter, moreButton.style.display)
+    // if (previouslyRemovedWidth.length === 1 && previouslyRemovedWidth[0] < dashMarginAfter) {
+    // if (dashMarginAfter + 66 > previouslyRemovedWidth[0] && previouslyRemovedWidth.length === 1) {
+    //     console.log("here")
+    //     adjustLastExpanderLower()
+    // }
+
+    // if (dashMarginAfter + 66 > 150 && moreButton.style.display !== "none") {
+    //     console.log(dashMarginAfter + 66)
+    //     // console.log(66 + previouslyRemovedWidth[0], dashMarginAfter)
+    //    adjustLastExpanderLower()
+    // } // this may cause an callstack overflow so be carefull
 }
 window.onload = adjustLastExpanderLower
 
@@ -132,8 +153,8 @@ function adjustMoreExpander() {
     const moreDropdown = moreButton.querySelectorAll(".moreDropdown")
 
     for (let i = 0; i < expBot.children.length - 1; i++) {
-        console.log(i)
-        console.log(getComputedStyle(expBot.children[i]).display)
+        // console.log(i)
+        // console.log(getComputedStyle(expBot.children[i]).display)
         if (getComputedStyle(expBot.children[i]).display === "none") {
             moreDropdown[i].style.display = "flex"
         } else if (getComputedStyle(expBot.children[i]).display === "flex") {
@@ -491,7 +512,7 @@ onload = () => {
      } 
     catch (e) { console.error(e) }
 }
-onresize = () =>  {
+window.onresize = () =>  {
     adjustColumnsHeight()
     adjustLastExpanderLower()
     adjustLastExpanderUpper()
