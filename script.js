@@ -133,7 +133,12 @@ function adjustLastExpanderLower(e) {
     } else if (dashMarginAfter + 66 > previouslyRemovedWidth[0] && previouslyRemovedWidth.length === 1) {
         adjustLastExpanderLower()
     }
-    console.log(previouslyRemovedWidth[0], dashMarginAfter, moreButton.style.display)
+    
+    // console.log(previouslyRemovedWidth[0], dashMarginAfter, moreButton.style.display)
+
+
+
+
     // if (previouslyRemovedWidth.length === 1 && previouslyRemovedWidth[0] < dashMarginAfter) {
     // if (dashMarginAfter + 66 > previouslyRemovedWidth[0] && previouslyRemovedWidth.length === 1) {
     //     console.log("here")
@@ -367,7 +372,31 @@ function adjustBreadcrumb(n = 0) {
     }
 }
 
-// BUTTONS
+// MOBILE HAMBURGER AND NAVIGATION PANEL
+
+const mobileNavButton = document.querySelector(".hamburgerMobile")
+const mobileNavPanel = document.querySelector(".mobileNavigation")
+const mobileNavBackground = document.querySelector(".mobileBackground")
+const closeButton = document.querySelector(".mobileClose")
+
+function mobileNavButtonHandler() {
+    console.log("asdf")
+    mobileNavPanel.classList.remove("hidden")
+    mobileNavBackground.classList.remove("hidden")
+    body.classList.add("fixedPosition")
+}
+function closeMobileNavPanel() {
+    mobileNavPanel.classList.add("hidden")
+    mobileNavBackground.classList.add("hidden")
+    body.classList.remove("fixedPosition")
+}
+
+mobileNavBackground.addEventListener("click", closeMobileNavPanel)
+closeButton.addEventListener("click", closeMobileNavPanel)
+mobileNavButton.addEventListener("click", mobileNavButtonHandler)
+
+
+// BUTTONS ???
 
 const showButton = document.querySelectorAll(".showMore")
 const resourcesList = document.querySelectorAll(".resourcesListUl")
