@@ -6,13 +6,23 @@
     font-family: Segoe UI,SegoeUI,Helvetica Neue,Helvetica,Arial,sans-serif;
     line-height: 1.125;
     /* box-shadow: inset 0px 0px 5px 0px rgba(255, 100, 100, 1); */
-
+    
 }
 .fixedPosition {
     position: fixed;
     top: 0px;
     left: 0px;
     width: -webkit-fill-available;
+    overflow-y: scroll;
+}
+.mobileBackground {
+    width: 200%;
+    height: 200%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: #00000080;
+    z-index: 1;
 }
 .svgTheme {
     width: 40px;
@@ -371,6 +381,69 @@ ul.expanderList li * {
     font-size: 18px;
     font-weight: 600;
     white-space: nowrap;
+}
+.contributorsFrame {
+    position: fixed;
+    width: 250px;
+    background-color: #171717;
+    border: 1px solid #404040;
+    top: 88px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+div.contributorsFrame header {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 20px 8px 20px;
+    border-bottom: 1px solid #404040;
+}
+div.contributorsFrame header span {
+    padding: 8px 0 16px 0;
+}
+.closeContributors .closeIcon {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    top: 8px;
+    left: 6px;
+    /* background-color: red; */
+}
+.closeContributors .xUp {
+    transform: translate(9px, 3px) rotate(-45deg) scale(0.7)
+}
+.closeContributors .xDown {
+    transform: translate(9px, 3px) rotate(135deg) scale(0.7)
+} 
+.contributorsList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.contributorElem {
+    display: flex;
+    align-items: center;
+    padding: 8px 8px 8px 16px;
+    border-bottom: 1px solid #404040;
+    border-left: 3px solid #404040;
+}
+.contributorPicture {
+    display: inline-block;
+    margin-left: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #404040;
+}
+.contributorName:link {
+    padding-left: 16px;
+    text-decoration: none;
+    color: #75b6e7;
+    
+}
+.contributorName:visited {
+    color: #ac7ee1;
+    
 }
 .main {
     height: 1500px;

@@ -385,16 +385,37 @@ function mobileNavButtonHandler() {
     mobileNavBackground.classList.remove("hidden")
     body.classList.add("fixedPosition")
 }
-function closeMobileNavPanel() {
+function closeMobileNavPanels() {
     mobileNavPanel.classList.add("hidden")
+    contributorsPanel.classList.add("hidden")
     mobileNavBackground.classList.add("hidden")
     body.classList.remove("fixedPosition")
 }
 
-mobileNavBackground.addEventListener("click", closeMobileNavPanel)
-closeButton.addEventListener("click", closeMobileNavPanel)
+mobileNavBackground.addEventListener("click", closeMobileNavPanels)
+closeButton.addEventListener("click", closeMobileNavPanels)
 mobileNavButton.addEventListener("click", mobileNavButtonHandler)
 
+// CONTRIBUTORS PANEL
+
+const contributorsPanel = document.querySelector(".contributorsFrame")
+const contributorsButton = document.querySelector(".contributors")
+const closeContributors = document.querySelector(".closeContributors .closeIcon")
+
+function contributorsOpener() {
+    const avatars = document.querySelectorAll(".contributorPicture")
+    avatars.forEach(picture => {
+        picture.style.backgroundColor = "#" + Math.floor(Math.random()*16777245).toString(16)
+    })
+
+
+    contributorsPanel.classList.remove("hidden")
+    mobileNavBackground.classList.remove("hidden")   
+    body.classList.add("fixedPosition")
+}
+
+contributorsButton.addEventListener("click", contributorsOpener)
+closeContributors.addEventListener("click", closeMobileNavPanels)
 
 // BUTTONS ???
 
