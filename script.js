@@ -552,6 +552,13 @@ function codeFormatting() {
 
 codeFormatting()
 
+function setCssVariables() {
+    const root = document.querySelector(":root")
+    const contrList = document.querySelectorAll(".contributorElem")
+    const contrHeight = contrList.length * 50 + 75
+    root.style.setProperty("--contrPos", `${contrHeight / 2 + 30}px`)
+}
+
 onload = () => {
     try { 
         // shouldResize()
@@ -559,6 +566,7 @@ onload = () => {
         document.querySelector(".activeContent").scrollIntoView()
         adjustBreadcrumb()
         adjustLastExpanderLower()
+        setCssVariables()
      } 
     catch (e) { console.error(e) }
 }
