@@ -556,7 +556,27 @@ function setCssVariables() {
     const root = document.querySelector(":root")
     const contrList = document.querySelectorAll(".contributorElem")
     const contrHeight = contrList.length * 50 + 75
-    root.style.setProperty("--contrPos", `${contrHeight / 2 + 30}px`)
+    root.style.setProperty("--contrPos", `${contrHeight / 2 + 17}px`)
+}
+
+function squeezeContributors() {
+    const contrHeight = document.querySelector(".contributorsFrame").offsetHeight
+    //if (contrHeight === 0) return // return if contributors are closed
+    const contrBaseHeight = 420 // should be calculated as in setCssVariables() fun
+
+    console.log(contrHeight, contrBaseHeight, window.innerHeight)
+    console.log(window.innerHeight - 17 * 2 - contrHeight)
+    const diff = window.innerHeight - 17 * 2 - contrBaseHeight
+    if (diff <= 0) {
+        const newHeight = contrBaseHeight + diff // diff is a negative number now
+        document.querySelector(".contributorsList").style.height = `${newHeight - 75}px`
+        document.querySelector(".contributorsList").style.overflowY = "scroll"
+        document.querySelector(".contributorsFrame").style.transform = "translateX(-50%) translateY(-215px)"
+    } else if (diff > 0) {
+        document.querySelector(".contributorsList").style.height = "auto"
+        document.querySelector(".contributorsList").style.overflowY = "unset"
+        //document.querySelector(".contributorsFrame").style.transform = "translateX(-50%) translateY(-50%)"
+    }
 }
 
 onload = () => {
@@ -571,6 +591,7 @@ onload = () => {
     catch (e) { console.error(e) }
 }
 window.onresize = () =>  {
+    squeezeContributors()
     adjustColumnsHeight()
     adjustLastExpanderLower()
     adjustLastExpanderUpper()
