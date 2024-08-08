@@ -124,7 +124,7 @@ function adjustLastExpanderLower(e) {
     if (previouslyRemovedWidth.length <= 0) moreButton.style.display = "none"
     const dashMarginAfter = Number(getComputedStyle(dashboard).getPropertyValue("margin-left").slice(0, -2))
     // if (dashMarginAfter <= 0 || (dashMarginAfter + 66 > previouslyRemovedWidth[0] && previouslyRemovedWidth.length >= 1)) {
-    console.log(previouslyRemovedWidth[previouslyRemovedWidth.length - 1] < dashMarginAfter + 66)
+    // console.log(previouslyRemovedWidth[previouslyRemovedWidth.length - 1] < dashMarginAfter + 66)
     if (dashMarginAfter <= 0) {
         adjustLastExpanderLower()
     } else if (dashMarginAfter > previouslyRemovedWidth[previouslyRemovedWidth.length - 1] 
@@ -386,8 +386,10 @@ function mobileNavButtonHandler() {
     body.classList.add("fixedPosition")
 }
 function closeMobileNavPanels() {
+    console.log("test")
     mobileNavPanel.classList.add("hidden")
     contributorsPanel.classList.add("hidden")
+    feedbackPanel.classList.add("hidden")
     mobileNavBackground.classList.add("hidden")
     body.classList.remove("fixedPosition")
 }
@@ -416,6 +418,96 @@ function contributorsOpener() {
 
 contributorsButton.addEventListener("click", contributorsOpener)
 closeContributors.addEventListener("click", closeMobileNavPanels)
+
+// FEEDBACK PANEL
+
+const feedbackBtn = document.querySelector(".feedbackMeta")
+const feedbackPanel = document.querySelector(".feedbackFrame")
+const closeFeedback = document.querySelector(".closeFeedback")
+
+function feedbackOpener() {
+    feedbackPanel.classList.remove("hidden")
+    mobileNavBackground.classList.remove("hidden")
+}
+
+feedbackBtn.addEventListener("click", feedbackOpener)
+closeFeedback.addEventListener("click", closeMobileNavPanels)
+
+// FEEDBACK FORM
+// FORM BEHAVIOUR
+
+const thumbUp = document.querySelector(".thumbUpButton")
+const thumbDown = document.querySelector(".thumbDownButton")
+const upSquares = document.querySelector(".thumbIsUpSquares")
+const downSquares = document.querySelector(".thumbIsDownSquares")
+
+const submitButton = document.querySelector("#submitButton")
+const feedbackForm = document.querySelector(".feedbackForm")
+const checkboxes = document.querySelectorAll(".checkbox")
+const inputError = document.querySelector(".inputError")
+
+const checkboxLabels = document.querySelectorAll(".checkboxLabel")
+
+function feedbackThumbsSwitch(e) {
+    switch(e.currentTarget.id) {
+        case "thumbDown":
+            thumbUp.classList.remove("clickedBtn")
+            thumbDown.classList.add("clickedBtn")
+            downSquares.classList.remove("hidden")
+            upSquares.classList.add("hidden")
+        break;
+        case "thumbUp":
+            thumbDown.classList.remove("clickedBtn")
+            thumbUp.classList.add("clickedBtn")
+            upSquares.classList.remove("hidden")
+            downSquares.classList.add("hidden")
+        break;
+    }
+    inputError.classList.add("hidden")
+}
+
+function submitForm() {
+    if (Array.from(checkboxes).every(box => box.checked === false)) {
+        inputError.classList.remove("hidden")
+        return
+    }
+    console.log("asdf")
+    feedbackForm.submit()
+}
+
+function chooseCheckbox(e) {
+    inputError.classList.add("hidden")
+
+    if (e.target.checked === true) {
+        e.currentTarget.parentNode.querySelector(".checkbIcon").style.backgroundColor = "#75b6e7"
+        e.currentTarget.parentNode.querySelector(".checkbIcon").style.borderColor = "#75b6e7"
+        e.currentTarget.parentNode.querySelector(".checkbIcon").classList.add("checkbIcoChecked")
+        
+    } else if (e.target.checked === false) {
+        e.currentTarget.parentNode.querySelector(".checkbIcon").style.backgroundColor = ""
+        e.currentTarget.parentNode.querySelector(".checkbIcon").style.borderColor = ""
+        e.currentTarget.parentNode.querySelector(".checkbIcon").classList.remove("checkbIcoChecked")
+        
+    }
+}
+
+function labelHover(e) {
+    e.currentTarget.querySelector(".checkbIcon").classList.add("checkbIcoHov")
+}
+
+function labelLeave(e) {
+    e.currentTarget.querySelector(".checkbIcon").classList.remove("checkbIcoHov")
+}
+
+thumbUp.addEventListener("click", (e) => feedbackThumbsSwitch(e))
+thumbDown.addEventListener("click", (e) => feedbackThumbsSwitch(e))
+
+checkboxes.forEach(box => box.addEventListener("change", (e) => chooseCheckbox(e)))
+submitButton.addEventListener("click", submitForm)
+
+checkboxLabels.forEach(label => label.addEventListener("mouseover", (e) => labelHover(e)))
+checkboxLabels.forEach(label => label.addEventListener("mouseleave", (e) => labelLeave(e)))
+
 
 // BUTTONS ???
 
@@ -557,6 +649,9 @@ function setCssVariables() {
     const contrList = document.querySelectorAll(".contributorElem")
     const contrHeight = contrList.length * 50 + 75
     root.style.setProperty("--contrPos", `${contrHeight / 2 + 17}px`)
+    root.style.setProperty("--feedbackMaxHeight", `${window.innerHeight - 40}px`)
+    // console.log(window.innerHeight)
+    // console.log(window.innerHeight - 100)
 }
 
 function squeezeContributors() {
@@ -587,10 +682,11 @@ onload = () => {
         adjustBreadcrumb()
         adjustLastExpanderLower()
         setCssVariables()
-     } 
+    } 
     catch (e) { console.error(e) }
 }
 window.onresize = () =>  {
+    setCssVariables()
     squeezeContributors()
     adjustColumnsHeight()
     adjustLastExpanderLower()

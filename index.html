@@ -8,6 +8,95 @@
     <script src="script.js" defer></script>
 </head>
 <body>
+    <div class="feedbackFrame hidden">
+        <button class="closeFeedback">
+            <div class="closeIcon">
+                <span class="xUp"></span>
+                <span class="xDown"></span>
+            </div>
+        </button>
+        <h2 class="feedbackHeader">Was this page helpful?</h2>
+        <form id="feedbackForm" class="feedbackForm" action="" method="get">
+            <div class="feedbackThumbs">
+                <button type="button" id="thumbUp" class="thumbUpButton clickedBtn" aria-pressed="false"><span><!--👍--></span><span>Yes</span></button>
+                <button type="reset" id="thumbDown" class="thumbDownButton" aria-pressed="false"><span><!--👎--></span><span>No</span></button>
+            </div>
+            <fieldset>
+                <legend>What is the reason for your feedback? <span class="requiredStar">*</span></legend>
+                <div class="thumbIsUpSquares">
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxUp checkbox" name="content-easy">
+                        <span class="checkbIcon"></span>
+                        <span>Content is easy to understand</span>              
+                    </label>
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxUp checkbox" name="solved-problem">
+                        <span class="checkbIcon"></span>
+                        <span>I accomplished my task or solved my problem</span>              
+                    </label>
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxUp checkbox" name="easy-find">
+                        <span class="checkbIcon"></span>
+                        <span>Information was easy to find</span>              
+                    </label>
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxUp checkbox" name="learned-new">
+                        <span class="checkbIcon"></span>
+                        <span>I learned something new</span>
+                    </label>
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxUp checkbox" name="other">
+                        <span class="checkbIcon"></span>
+                        <span>Other</span>           
+                    </label>
+                </div>
+                <div class="thumbIsDownSquares hidden">
+
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxDown checkbox" name="hard-understand">
+                        <span class="checkbIcon"></span>
+                        <span>Content is hard to understand</span>              
+                    </label>
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxDown checkbox" name="doesn't-work">
+                        <span class="checkbIcon"></span>
+                        <span>Procedure or code doesn't work</span>              
+                    </label>
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxDown checkbox" name="couldn't-find">
+                        <span class="checkbIcon"></span>
+                        <span>Couldn't find what I need</span>              
+                    </label>
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxDown checkbox" name="out-of-date">
+                        <span class="checkbIcon"></span>
+                        <span>Out of date/obsolete</span>
+                    </label>
+                    <label class="checkboxLabel">
+                        <input type="checkbox" class="checkboxDown checkbox" name="other">
+                        <span class="checkbIcon"></span>
+                        <span>Other</span>           
+                    </label>
+                </div>
+                <p class="inputError hidden">At last one item should be selected.</p>
+            </fieldset>
+            <div class="">
+                <legend class="tellMore">Tell us more.</legend>
+                <label for="feedbackTextArea"></label>
+                <textarea id="feedbackTextArea" name="user-message" placeholder="Share your experience with us, but please don't include sensitive or personal information."></textarea>
+            </div>
+            <div class="feedbackBottom">
+                <button id="submitButton" class="submitButton" type="button">Submit</button>
+                <a class="privacyPolicy" href="#">Privacy policy</a>
+            </div>
+            <div class="feedbackLinks">
+                <a href="#">Provide product feedback</a>
+                <span class="dividerLine">|</span>
+                <a href="#">Get help at Microsoft Q&A</a>
+            </div>
+            
+        </form>
+    </div>
     <div class="contributorsFrame hidden">
         <header>
             <span>Contributors to this article</span>
@@ -510,7 +599,7 @@
                                 <li><button class="contributors">7 contributors</button></li>
                             </ul>
                         </div>
-                        <div class="feedbackMeta">👍 Feedback</div>
+                        <div class="feedbackMeta"><!--👍--> Feedback</div>
                     </div>
                     <nav class="articleNavbar">
                         <h2 class="navbarTitle">In this article</h2>
