@@ -413,6 +413,7 @@ function contributorsOpener() {
 
     contributorsPanel.classList.remove("hidden")
     mobileNavBackground.classList.remove("hidden")   
+    // fixed position works awful on Firefox
     body.classList.add("fixedPosition")
 }
 
@@ -455,12 +456,14 @@ function feedbackThumbsSwitch(e) {
             thumbDown.classList.add("clickedBtn")
             downSquares.classList.remove("hidden")
             upSquares.classList.add("hidden")
+            checkCheckedCheckboxes()
         break;
         case "thumbUp":
             thumbDown.classList.remove("clickedBtn")
             thumbUp.classList.add("clickedBtn")
             upSquares.classList.remove("hidden")
             downSquares.classList.add("hidden")
+            checkCheckedCheckboxes()
         break;
     }
     inputError.classList.add("hidden")
@@ -487,8 +490,43 @@ function chooseCheckbox(e) {
         e.currentTarget.parentNode.querySelector(".checkbIcon").style.backgroundColor = ""
         e.currentTarget.parentNode.querySelector(".checkbIcon").style.borderColor = ""
         e.currentTarget.parentNode.querySelector(".checkbIcon").classList.remove("checkbIcoChecked")
-        
     }
+    // sessionStorage.setItem(`${e.currentTarget.name}`,`${e.currentTarget.checked}`)
+    updateFormStorage(`${e.currentTarget.name}`,`${e.currentTarget.checked}`)
+}
+
+function createFormStorage() {
+    const formObj = {}
+    checkboxes.forEach(c => formObj[`${c.name}`] = `${c.checked}`)
+    const formStr = JSON.stringify(formObj)
+    sessionStorage.setItem("form", formStr)
+    // checkboxes.forEach(c => sessionStorage.setItem(`${c.name}`, `${c.checked}`))
+}
+
+function updateFormStorage(name, checked) {
+    const formObj = JSON.parse(sessionStorage.getItem("form"))
+    formObj[name] = checked
+    const formStr = JSON.stringify(formObj)
+    sessionStorage.setItem("form", formStr)
+}
+
+function checkCheckedCheckboxes() {
+    const formObj = JSON.parse(sessionStorage.getItem("form"))
+    console.log(Object.entries(formObj))
+
+    for (const [key, value] of Object.entries(formObj)) {
+        console.log(typeof value)
+        const box = document.querySelector(`input[name="${key}"]`)
+        const checkedBool = (value === "true")
+        box.checked = checkedBool
+        // value == "true" ? box.checked = true : box.checked = false
+    }
+
+    // formObj.forEach(box => {
+    //     document.querySelector(`input[name="${box.name}"]`).checked = box.checked
+    // })
+
+    // document.querySelector(`input[name="${checkName}"]`).checked = true
 }
 
 function labelHover(e) {
@@ -678,10 +716,17 @@ onload = () => {
     try { 
         // shouldResize()
         adjustColumnsHeight()
-        document.querySelector(".activeContent").scrollIntoView()
         adjustBreadcrumb()
         adjustLastExpanderLower()
         setCssVariables()
+        createFormStorage()
+        // causes bug that scrolls the website down on reload
+        // today I learned: block option fixes it for some reasen
+        document.querySelector(".activeContent").scrollIntoView({ 
+            //behavior: 'smooth', 
+            block: 'nearest', 
+            //inline: 'start' 
+        })
     } 
     catch (e) { console.error(e) }
 }
