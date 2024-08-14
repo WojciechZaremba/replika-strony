@@ -151,7 +151,7 @@ function adjustLastExpanderLower(e) {
     //    adjustLastExpanderLower()
     // } // this may cause an callstack overflow so be carefull
 }
-window.onload = adjustLastExpanderLower
+//window.onload = adjustLastExpanderLower
 
 function adjustMoreExpander() {
     const moreButton = document.querySelector("#moreButton")
@@ -714,19 +714,53 @@ function squeezeContributors() {
 
 onload = () => {
     try { 
-        // shouldResize()
         adjustColumnsHeight()
-        adjustBreadcrumb()
         adjustLastExpanderLower()
+        const a = function () {
+            const offset = document.querySelector(".activeContent").offsetTop 
+            // let scroll = document.querySelector(".tableOfContent").scrollTop 
+            // document.querySelector(".tableOfContent").scrollTop 
+            // = document.querySelector(".activeContent").offsetTop
+            // + document.querySelector(".tableOfContent").clientHeight
+            // contHeight < offset ? scroll = offset + contHeight : scroll = 0
+            
+            const contHeight = document.querySelector(".tableOfContent").clientHeight
+            const activePos = document.querySelector(".activeContent").getBoundingClientRect().top
+            const containerPos = document.querySelector(".tableOfContent").getBoundingClientRect().top
+
+            const activeRelativePos = activePos - containerPos
+            const shouldScroll = (contHeight < activeRelativePos)
+            
+            if (shouldScroll) {
+                console.log("activePos", activePos)
+                console.log("containerPos", containerPos)
+                console.log("contHeight", contHeight)
+                console.log("activeRelativePos", activeRelativePos)
+                console.log("shouldScroll", shouldScroll)
+                console.log("shouldScrollThisMuch: ", activeRelativePos + contHeight)
+                // need to toss it to the event loop for the scrollbar appears with a delay causing problems
+                // why?
+                // is there a better fix?
+                setTimeout(()=>{document.querySelector(".tableOfContent").scrollTop = activeRelativePos + contHeight},0)
+            }
+                
+            // document.querySelector(".tableOfContent").scrollTop = (
+            //     offset > contHeight ? offset + contHeight : 0
+            // )
+        }
+        a()
+        // causes bug that scrolls the website down on reload
+        // block: nearest is still not a greatest soltion
+        // document.querySelector(".activeContent").scrollIntoView({ 
+        //     //behavior: 'smooth', 
+        //     block: 'nearest', 
+        //     //inline: 'start' 
+        //     // start, center, end, or nearest
+        // })
+        // shouldResize()
+        adjustBreadcrumb()
         setCssVariables()
         createFormStorage()
-        // causes bug that scrolls the website down on reload
-        // today I learned: block option fixes it for some reasen
-        document.querySelector(".activeContent").scrollIntoView({ 
-            //behavior: 'smooth', 
-            block: 'nearest', 
-            //inline: 'start' 
-        })
     } 
     catch (e) { console.error(e) }
 }
