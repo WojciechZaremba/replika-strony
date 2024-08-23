@@ -97,6 +97,18 @@
             
         </form>
     </div>
+    <div class="feedbackThanks hidden">
+        <button class="closeFeedback">
+            <div class="closeIcon">
+                <span class="xUp"></span>
+                <span class="xDown"></span>
+            </div>
+        </button>
+        <div>
+            <h2>Thank you for your valuable feedback!</h2>
+            <p>Please note that although we cannot respond to feedback, our team will use your comments to improve the experience.</p>
+        </div>
+    </div>
     <div class="contributorsFrame hidden">
         <header>
             <span>Contributors to this article</span>
@@ -215,7 +227,11 @@
             </div>
             <div class="divider"></div>
             <div class="learn">Learn</div>
-            <div class="button rightArrow" id="leftArrow"><span class="expandIndicator rotateToLeft"></span></div>
+            <div class="button rightArrow hidden " id="leftArrow"><span class="expandIndicator rotateToLeft"></span></div>
+            <form class="searchBar hidden">
+                <input type="text" name="searchInput" id="searchInput" placeholder="Search">
+                <ul class="searchSuggestions"></ul>
+            </form>
             <div class="expanders expTop">
                 <div class="expanderElement expElemTop"> <span>Discover</span> <span class="expandIndicator"></span>
                     <div class="headerPanel expanderList hidden">
@@ -355,10 +371,12 @@
                     </div>
                 </div>
                 </div>
-                <div class="button rightArrow" id="rightArrow"><div class="expandIndicator rotateToRight"></div></div>
+                <div class="button rightArrow hidden" id="rightArrow">
+                    <div class="expandIndicator rotateToRight"></div>
+                </div>
                 <div class="searchButton">
-                <div class="search"></div>
-            </div>
+                    <div class="search" id="search"></div>
+                </div>
             <div class="signIn">Sign in</div>
         </div>
         <div class="lowerHeader header">

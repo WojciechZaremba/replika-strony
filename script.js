@@ -279,6 +279,28 @@ function spaceWarning() {
     }
 }
 
+// SEARCH BAR
+
+const searchBar = document.querySelector(".searchBar")
+const searchIcon = document.querySelector(".search")
+
+function handleSearchButton() {
+    console.log("search clicked")
+    searchBar.classList.toggle("hidden")
+    document.querySelector(".expanders.expTop").classList.toggle("hidden")
+    if (searchIcon.className === "search") {
+        searchIcon.classList.remove("search")
+        searchIcon.classList.add("closeSearch")
+        
+    } else if (searchIcon.className === "closeSearch") {
+        searchIcon.classList.remove("closeSearch")
+        searchIcon.classList.add("search")
+    }
+}
+
+searchButton.addEventListener("click", handleSearchButton)
+
+
 // ADJUST COLUMS HEIGHT
 
 const column = document.querySelector(".column")
@@ -330,6 +352,14 @@ const breadcrumb = document.querySelector(".breadcrumb")
 const article = document.querySelector(".article")
 
 const dots = document.querySelector(".detailsContainer")
+
+const detailsSquare = document.querySelector(".breadSummary")
+const clickableDots = dots.querySelector(".expDots")
+
+detailsSquare.addEventListener("click", (e) => {
+    if (e.target !== e.currentTarget) return
+    clickableDots.click()
+})
 
 dots.style.display = "none"
 
@@ -390,6 +420,7 @@ function closeMobileNavPanels() {
     mobileNavPanel.classList.add("hidden")
     contributorsPanel.classList.add("hidden")
     feedbackPanel.classList.add("hidden")
+    feedbackThanks.classList.add("hidden")
     mobileNavBackground.classList.add("hidden")
     body.classList.remove("fixedPosition")
 }
@@ -424,15 +455,23 @@ closeContributors.addEventListener("click", closeMobileNavPanels)
 
 const feedbackBtn = document.querySelector(".feedbackMeta")
 const feedbackPanel = document.querySelector(".feedbackFrame")
-const closeFeedback = document.querySelector(".closeFeedback")
+const closeFeedback = document.querySelectorAll(".closeFeedback")
+
 
 function feedbackOpener() {
-    feedbackPanel.classList.remove("hidden")
-    mobileNavBackground.classList.remove("hidden")
+    const feedbackSent = (sessionStorage.getItem("formSent") === "true")
+    
+    if (feedbackSent === false) {
+        feedbackPanel.classList.remove("hidden")
+        mobileNavBackground.classList.remove("hidden")
+    } else if (feedbackSent === true) {
+        feedbackThanks.classList.remove("hidden")
+        mobileNavBackground.classList.remove("hidden")
+    }
 }
 
 feedbackBtn.addEventListener("click", feedbackOpener)
-closeFeedback.addEventListener("click", closeMobileNavPanels)
+closeFeedback.forEach(cf => cf.addEventListener("click", closeMobileNavPanels))
 
 // FEEDBACK FORM
 // FORM BEHAVIOUR
@@ -469,14 +508,25 @@ function feedbackThumbsSwitch(e) {
     inputError.classList.add("hidden")
 }
 
+const feedbackThanks = document.querySelector(".feedbackThanks")
+
 function submitForm() {
     if (Array.from(checkboxes).every(box => box.checked === false)) {
         inputError.classList.remove("hidden")
         return
     }
     console.log("asdf")
-    feedbackForm.submit()
+    feedbackThanks.classList.remove("hidden")
+    feedbackPanel.classList.add("hidden")
+    feedbackForm.requestSubmit()
+    sessionStorage.setItem("formSent", true)
 }
+
+feedbackForm.addEventListener("submit", (e)=>{
+    e.preventDefault()
+    // feedback doesn't send anything at this point; should use fetch api
+    console.log(e)
+})
 
 function chooseCheckbox(e) {
     inputError.classList.add("hidden")
@@ -500,6 +550,7 @@ function createFormStorage() {
     checkboxes.forEach(c => formObj[`${c.name}`] = `${c.checked}`)
     const formStr = JSON.stringify(formObj)
     sessionStorage.setItem("form", formStr)
+    sessionStorage.setItem("formSent", false)
     // checkboxes.forEach(c => sessionStorage.setItem(`${c.name}`, `${c.checked}`))
 }
 
