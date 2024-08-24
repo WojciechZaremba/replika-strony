@@ -284,8 +284,9 @@ function spaceWarning() {
 const searchBar = document.querySelector(".searchBar")
 const searchIcon = document.querySelector(".search")
 
-function handleSearchButton() {
+function handleSearchButton(e) {
     console.log("search clicked")
+    e.stopPropagation()
     searchBar.classList.toggle("hidden")
     document.querySelector(".expanders.expTop").classList.toggle("hidden")
     if (searchIcon.className === "search") {
@@ -299,6 +300,7 @@ function handleSearchButton() {
 }
 
 searchButton.addEventListener("click", handleSearchButton)
+searchBar.addEventListener("click", (e) => e.stopPropagation())
 
 
 // ADJUST COLUMS HEIGHT
@@ -632,9 +634,11 @@ function shouldResize(n = 0) {
 }
 
 function handleClickAll(e) {
+    console.log("window event click")
     closeExpandersTop(e)
     closeExpandersBottom(e)
     closeDetails(e)
+    closeSearchBar(e)
     function closeExpandersTop(e) {
         const topExpanders = document.querySelectorAll(".expElemTop")
         const openExpanders = Array.from(topExpanders).some(exp => exp.classList.contains("activeTop"))
@@ -651,20 +655,19 @@ function handleClickAll(e) {
         })
     }
     function closeExpandersBottom(e) {
-            const botExpanders = document.querySelectorAll(".expElemBot")
-            const openExpanders = Array.from(botExpanders).some(exp => exp.classList.contains("activeTop")) // it should be "activeBot" or sth like that
-            if (openExpanders === false) return
-            console.log("closer bot")
-            let elem = e.target
-            while (elem !== body) {
-                if (Array.from(botExpanders).indexOf(elem) > -1) return
-                elem = elem.parentElement
-            }
-            botExpanders.forEach(exp => {
-                exp.querySelector(".expanderList")?.classList.add("hidden")
-                exp.classList.remove("activeTop")
-            })
-             
+        const botExpanders = document.querySelectorAll(".expElemBot")
+        const openExpanders = Array.from(botExpanders).some(exp => exp.classList.contains("activeTop")) // it should be "activeBot" or sth like that
+        if (openExpanders === false) return
+        console.log("closer bot")
+        let elem = e.target
+        while (elem !== body) {
+            if (Array.from(botExpanders).indexOf(elem) > -1) return
+            elem = elem.parentElement
+        }
+        botExpanders.forEach(exp => {
+            exp.querySelector(".expanderList")?.classList.add("hidden")
+            exp.classList.remove("activeTop")
+        })
     }
     function closeDetails(e) {
         const details = document.querySelector("details")
@@ -675,6 +678,14 @@ function handleClickAll(e) {
             elem = elem.parentElement
         }
         document.querySelector("details").open = false
+    }
+    function closeSearchBar(e) {
+            document.querySelector(".expanders.expTop").classList.remove("hidden")
+            searchBar.classList.add("hidden")
+        if (searchIcon.className === "closeSearch") {
+            searchIcon.classList.remove("closeSearch")
+            searchIcon.classList.add("search")
+        }
     }
 }
 
