@@ -229,8 +229,10 @@
             <div class="learn">Learn</div>
             <div class="button rightArrow hidden " id="leftArrow"><span class="expandIndicator rotateToLeft"></span></div>
             <form class="searchBar hidden">
-                <input type="text" name="searchInput" id="searchInput" placeholder="Search">
-                <ul class="searchSuggestions"></ul>
+                <input type="text" name="searchInput" id="searchInput" placeholder="Search" autocomplete="off" autofocus>
+                <div id="inputAwait" class="inputAwait hidden"></div>
+                <ul class="searchSuggestions hidden">
+                </ul>
             </form>
             <div class="expanders expTop">
                 <div class="expanderElement expElemTop"> <span>Discover</span> <span class="expandIndicator"></span>

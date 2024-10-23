@@ -375,6 +375,7 @@ ul.expanderList li * {
 	transform: rotate(90deg)
 }
 .searchBar {
+    position: relative;
 	height: 100%;
 	width: 100%;
 	display: flex;
@@ -389,7 +390,49 @@ ul.expanderList li * {
 	padding-left: 8px;
 }
 .searchBar ul {
-	position: fixed;
+    background-color: #171717;
+    border: #404040 1px solid;
+    width: 100%;
+    position: absolute;
+    top: 28px;
+    list-style-type: none;
+    padding: 8px;
+    z-index: 1;
+}
+.searchBar ul li { 
+    color: #e6e6e6;
+    line-height: 25.6px;
+    font-size: 16px;
+    padding: 0 8px;
+}
+.searchBar ul li span {
+    display: block;
+    font-size: 14px;
+    padding: 6px 0 7px;
+}
+.searchBar ul li:hover, .suggestionActive {
+    background-color: #2f2f2f;
+    outline: dashed white 2px;
+    outline-offset: -2px;
+}
+.inputAwait {
+    position: absolute;
+    right: 10px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    border: #278cda solid 3px;
+    border-left: rgba(0, 0, 255, 0) solid 3px;
+    border-bottom: rgba(0, 0, 255, 0) solid 3px;
+    animation: spin .6s infinite linear;
+}
+@keyframes spin {
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(360deg)
+    }
 }
 .button {
     display: flex;

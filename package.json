@@ -1,0 +1,16 @@
+{
+  "name": "proxy-microsoft",
+  "version": "1.0.0",
+  "description": "using ms api in the replica of a website",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.21.0",
+    "fetch": "^1.1.0"
+  }
+}

@@ -211,6 +211,7 @@ function adjustLastExpanderUpper(e) {
         rightArrow.style.display = "none"
     }
 }
+
 function handleNavbarArrows(e) {
     const searchMarginNum = Number(getComputedStyle(search).getPropertyValue("margin-left").slice(0, -2))
 
@@ -292,6 +293,7 @@ function handleSearchButton(e) {
     if (searchIcon.className === "search") {
         searchIcon.classList.remove("search")
         searchIcon.classList.add("closeSearch")
+        searchInput.focus()
         
     } else if (searchIcon.className === "closeSearch") {
         searchIcon.classList.remove("closeSearch")
@@ -302,6 +304,109 @@ function handleSearchButton(e) {
 searchButton.addEventListener("click", handleSearchButton)
 searchBar.addEventListener("click", (e) => e.stopPropagation())
 
+const searchInput = searchBar.querySelector("#searchInput")
+let searchSuggestions = {}
+
+function typingDelay(code, delay) {
+    delay = delay || 750
+    window.clearTimeout(delayFlag)
+    delayFlag = window.setTimeout(code, delay)
+}
+
+let delayFlag = null
+
+function inputTyping(e) {
+    const val = searchInput.value
+    console.log(e)
+    console.log(val)
+    if (e.key.match(/Arrow/)) return
+    if (!val) {
+        inputAwait.classList.add("hidden")
+        drawSuggestions() // call w/o arguments just to hide the box
+        return
+    }
+    if (e.key == "Backspace" && val) {
+        drawSuggestions()
+    }
+
+    inputAwait.classList.remove("hidden")
+
+    typingDelay(()=>{
+        console.log("%c typing delay testing", 'background: #222; color: #bada55')
+        fetch(`http://localhost:3000/test/${val}`)
+            .then(resp => resp.json())
+            .then(data => {
+                searchSuggestions = data
+                console.log(typeof data)
+                console.log(searchSuggestions.suggestions.length)
+                drawSuggestions(data)
+            })
+            .catch(error => console.error('Error:', error))
+            inputAwait.classList.add("hidden")
+            tempInputVal = val
+    }, 500)
+
+}
+
+function handleSeaClick(e) { // when this handler is defined in the drawSuggestion func it works twice
+    searchInput.value = e.target.textContent
+    document.querySelector(".searchSuggestions").removeEventListener("click", handleSeaClick)
+    drawSuggestions() // call w/o arguments just to hide the box
+}
+
+function drawSuggestions(data) {
+    const sugArr = data?.suggestions
+    const sugBox = document.querySelector(".searchSuggestions")
+    
+    console.log("draw")
+    
+    sugBox.innerHTML = ""
+    
+    if (data?.suggestions?.length > 0) {
+        sugBox.classList.remove("hidden")
+        sugBox.removeEventListener("click", handleSeaClick)
+        sugBox.addEventListener("click", handleSeaClick)
+        sugArr.forEach(sug => {
+            const sugElem = `<li class="suggestedElem"><span>${sug}</span></li>`
+            sugBox.insertAdjacentHTML("beforeend", sugElem)
+            
+        })
+    } else {
+        sugBox.classList.add("hidden")
+        sugBox.removeEventListener("click", handleSeaClick)
+    }
+}
+
+searchInput.addEventListener("keyup", inputTyping)
+searchInput.addEventListener("keydown", handleArrowKeys)
+
+let curSugIdx = -1
+let tempInputVal = ""
+
+function handleArrowKeys(e) {
+    if (e.key.match(/Arrow/) === null) return
+    if (e.key.match(/Up|Down/)) e.preventDefault() // keep cursor at the end when choosing the suggestion
+    
+    let diff = e.key === "ArrowUp" ? -1 : e.key === "ArrowDown" ? 1 : null
+    curSugIdx += diff
+
+    if (curSugIdx >= searchSuggestions.suggestions.length) {
+        curSugIdx = -1
+    }
+    if (curSugIdx < -1) curSugIdx = searchSuggestions.suggestions.length - 1
+    
+    const sugestions = document.querySelectorAll(".suggestedElem")
+    sugestions.forEach(elem => elem.classList.remove("suggestionActive"))
+    sugestions[curSugIdx]?.classList.add("suggestionActive")
+    searchInput.value = sugestions[curSugIdx]?.textContent
+    curSugIdx === -1 ? searchInput.value = tempInputVal : searchInput.value = sugestions[curSugIdx]?.textContent
+
+    
+    // console.log(searchSuggestions.suggestions)
+    // console.log("%ctesting arrows","color: red",e.key)
+    // console.log(`%c${curSugIdx}`,"color: green",e.key)
+    
+}
 
 // ADJUST COLUMS HEIGHT
 
@@ -679,6 +784,9 @@ function handleClickAll(e) {
         }
         document.querySelector("details").open = false
     }
+    // this one uses stop propagation method in a different place
+    // so I don't have to iterate throught the document myself
+    // to prevent hiding element when users clicks on it
     function closeSearchBar(e) {
             document.querySelector(".expanders.expTop").classList.remove("hidden")
             searchBar.classList.add("hidden")
