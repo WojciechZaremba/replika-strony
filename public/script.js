@@ -333,7 +333,7 @@ function inputTyping(e) {
 
     typingDelay(()=>{
         console.log("%c typing delay testing", 'background: #222; color: #bada55')
-        fetch(`http://localhost:3000/test/${val}`)
+        fetch(`https://replika-strony.onrender.com/test/${val}`)
             .then(resp => resp.json())
             .then(data => {
                 searchSuggestions = data
