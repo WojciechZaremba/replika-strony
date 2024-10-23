@@ -4,6 +4,7 @@
   "description": "using ms api in the replica of a website",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
