@@ -1,3 +1,4 @@
+
 {
   "name": "proxy-microsoft",
   "version": "1.0.0",
@@ -13,5 +14,13 @@
   "dependencies": {
     "express": "^4.21.0",
     "fetch": "^1.1.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WojciechZaremba/replika-strony.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WojciechZaremba/replika-strony/issues"
+  },
+  "homepage": "https://github.com/WojciechZaremba/replika-strony#readme"
 }
