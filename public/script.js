@@ -380,6 +380,16 @@ function drawSuggestions(data) {
 searchInput.addEventListener("keyup", inputTyping)
 searchInput.addEventListener("keydown", handleArrowKeys)
 
+window.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+        e.preventDefault()
+        document.querySelector("html").classList.toggle("themeLight")
+        document.querySelector("html").classList.toggle("themeDark")
+    }
+    
+
+})
+
 let curSugIdx = -1
 let tempInputVal = ""
 
@@ -639,13 +649,13 @@ function chooseCheckbox(e) {
     inputError.classList.add("hidden")
 
     if (e.target.checked === true) {
-        e.currentTarget.parentNode.querySelector(".checkbIcon").style.backgroundColor = "#75b6e7"
-        e.currentTarget.parentNode.querySelector(".checkbIcon").style.borderColor = "#75b6e7"
+        // e.currentTarget.parentNode.querySelector(".checkbIcon").style.backgroundColor = "#75b6e7"
+        // e.currentTarget.parentNode.querySelector(".checkbIcon").style.borderColor = "#75b6e7"
         e.currentTarget.parentNode.querySelector(".checkbIcon").classList.add("checkbIcoChecked")
         
     } else if (e.target.checked === false) {
-        e.currentTarget.parentNode.querySelector(".checkbIcon").style.backgroundColor = ""
-        e.currentTarget.parentNode.querySelector(".checkbIcon").style.borderColor = ""
+        // e.currentTarget.parentNode.querySelector(".checkbIcon").style.backgroundColor = ""
+        // e.currentTarget.parentNode.querySelector(".checkbIcon").style.borderColor = ""
         e.currentTarget.parentNode.querySelector(".checkbIcon").classList.remove("checkbIcoChecked")
     }
     // sessionStorage.setItem(`${e.currentTarget.name}`,`${e.currentTarget.checked}`)

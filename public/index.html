@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="themeLight">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -775,6 +775,14 @@
                         <img src="https://learn.microsoft.com/en-us/windows/win32/learnwin32/images/graphics21.png" alt="rotation">
                         <p>The rotation is performed around the center of the original rectangle. Here is the code for this transform.
                         </p>
+                        <div class="codeContainer">
+                            <div class="codeHeader"><span>C++</span><button># Copy</button></div>
+                            <pre><code>
+    D2D1::Matrix3x2F rot = D2D1::Matrix3x2F::Rotation(45, center);
+    D2D1::Matrix3x2F trans = D2D1::Matrix3x2F::Translation(x, 0);
+    pRenderTarget->SetTransform(trans * rot);
+                            </code></pre>
+                        </div>
                         <p>As you can see, the matrices are the same, but the order of operations has changed. This happens because matrix multiplication is not commutative: M × N ≠ N × M.
                         </p>
                         <h2 id="next">Next</h2>
