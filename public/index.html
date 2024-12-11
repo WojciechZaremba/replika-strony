@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="themeLight">
+<html lang="en" class="themeDark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -903,9 +903,34 @@
                     <span>Your Privacy Choices</span>
                 </a>
             </div>
-            <div id="test" class="themeContainer">
+
+            <div class="themesContainer">
+                <button class="expandThemeBtn">Theme</button>
+                <ul id="themeList" class="themeList">
+                    <li id="themeElemLight" class="themeElem btnLight">
+                        <button class="themeBtn btnLight">
+                            <svg class="svgTheme btnLight"></svg>
+                            <span class="btnLight">Light</span>
+                        </button>
+                    <li id="themeElemDark" class="themeElem activeTheme btnDark">
+                        <button class="themeBtn btnDark">
+                            <svg class="svgTheme btnDark"></svg>
+                            <span class=" btnDark">Dark</span>
+                        </button>
+                    <li id="themeElemContrast" class="themeElem btnContrast">
+                        <button class="themeBtn btnContrast">
+                            <svg class="svgTheme btnContrast"></svg>
+                            <span class=" btnContrast">High Contrast</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+
+
+            <!-- <div id="test" class="themeContainer">
                 <button class="themeButton">Theme</button>
-                <div class="themeListContainer">
+                <div class="themeListContainer">ASF
                     <ul class="themeList">
                         <li class="themeElem">
                             <button class="themeButton">
@@ -927,7 +952,8 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div> -->
+
         </div>
         <ul class="footerLinks">
             <li>

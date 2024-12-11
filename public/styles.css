@@ -1524,21 +1524,27 @@ ul.resourcesListUl li a:visited {
     display: flex;
 }
 .footerButtons {
+    position: relative;
     padding-left: 16px;
     gap: 1rem;
     line-height: 21px;
     height: 31.5px;
-    cursor: pointer;
 }
-.footerButtons>*:hover {
+.footerButtons>:not(:has(ul:hover)):hover { /* ic butiful: */
     background-color: var(--backgroundSth);
     text-decoration: underline;
+    cursor: pointer;
 }
+/* .footerButtons>*:hover {
+    background-color: var(--backgroundSth);
+    text-decoration: underline;
+} */
 .footerButtons  *:not(svg, span) {
     font-weight: 600;
     /* padding-left: 12px; */
 }
 .footerButtons > * {
+    padding: 0 20px;
     display: flex;
     align-items: center;
     height: 100%;
@@ -1547,10 +1553,10 @@ ul.resourcesListUl li a:visited {
     padding-right: 10px;
     padding-left: 5px;
 }
-.themeContainer {
+.themesContainer {
+    position: relative;
     padding-left: 10px;
     padding-right: 10px;
-
 }
 .privacy > a {
     display: flex;
@@ -1568,11 +1574,17 @@ ul.footerLinks {
     padding-left: 0;
     height: 30px;
 }
-ul.footerLinks button, .themeButton {
+ul.footerLinks button, .expandThemeBtn {
     background-color: unset;
     cursor: pointer;
     border: unset;
     padding: unset;
+}
+button.expandThemeBtn:before {
+    content: "";
+    inset: 0;
+    z-index: 1;
+    position: absolute;
 }
 ul.footerLinks a:hover, ul.footerLinks button:hover{
     text-decoration: underline;
@@ -1581,11 +1593,44 @@ ul.footerLinks a:hover, ul.footerLinks button:hover{
 ul.footerLinks>li:last-child {
     margin-right: 0;
 }
-.themeListContainer {
-    display: none;
+.themeList {
+    padding: 8px;
+    margin: 0;
+    background-color: var(--backgroundDark);
+    border: 1px solid var(--middleGrayBorder);
+    position: absolute;
+    left: 0px;
+    bottom: 39px;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 157px;
+    height: 116px;
+    box-shadow: 0 6.4px 14.4px 0 #00000021, 0 1.2px 3.6px 0 #0000001c;
+}
+.themeElem button span {
+    font-size: 14px;
+}
+.themeElem button {
+    background-color: var(--backgroundDark);
+    border: 1px solid var(--backgroundDark);
+    padding: 0;
+    width: 100%;
+    height: 33.5px;
+    display: flex;
+    align-items: center;
+}
+.themeElem button:hover {
+    background-color: var(--grayBackground);
+    cursor: pointer;
 }
 .themeElem {
-    display: none;
+    display: block;
+    width: auto;
+}
+.activeTheme {
+    border: 1px solid var(--blueFont);
+    border-radius: 2px;
 }
 .squareArrowPlaceholder {
     display: inline-block;
@@ -1893,7 +1938,6 @@ ul.footerLinks>li:last-child {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
-
 .hidden {
     display: none;
 }

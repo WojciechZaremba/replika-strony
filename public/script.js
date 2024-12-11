@@ -380,15 +380,65 @@ function drawSuggestions(data) {
 searchInput.addEventListener("keyup", inputTyping)
 searchInput.addEventListener("keydown", handleArrowKeys)
 
-window.addEventListener("keydown", (e) => {
-    if (e.code === "Space") {
-        e.preventDefault()
-        document.querySelector("html").classList.toggle("themeLight")
-        document.querySelector("html").classList.toggle("themeDark")
-    }
-    
+// THEMES SWITCHER
 
-})
+const themesButton = document.querySelector(".expandThemeBtn")
+const themesMenu = document.querySelector("#themeList")
+themesButton.addEventListener("mouseup", toggleThemesMenu)
+themesMenu.addEventListener("mouseup", themesListener)
+
+// themesButton.addEventListener("click", (e) => e.stopPropagation()) // prevents unexpected behaviour from hencleClickAll()
+// REMOVED ABOVE - just used "container.contains("elem")" technique in the handleClickAll()
+
+function toggleThemesMenu() {
+    console.log("toggle themes menu fun")
+    themesMenu.classList.toggle("hidden")
+}
+
+function themesListener(e) {
+    const dark = e.target.classList.contains("btnDark")
+    const light = e.target.classList.contains("btnLight")
+    const contrast = e.target.classList.contains("btnContrast")
+    const htmlElem = document.querySelector("html")
+    const elems = document.querySelectorAll(".themeElem")
+    
+    if (dark || light || contrast) {
+        htmlElem.classList.remove("themeLight", "themeContrast", "themeDark")
+        elems.forEach(elem => elem.classList.remove("activeTheme"))
+    }
+    if (dark) {
+        htmlElem.classList.add("themeDark")
+        themeElemDark.classList.add("activeTheme")
+    } else if (light) {
+        htmlElem.classList.add("themeLight")
+        themeElemLight.classList.add("activeTheme")
+    } else if (contrast) {
+        htmlElem.classList.add("themeContrast")
+        themeElemContrast.classList.add("activeTheme")
+    }
+}
+
+// testing themes
+// window.addEventListener("keydown", (e) => {
+//     if (e.code !== "Space") return
+//     e.preventDefault()
+//     const htmlElem = document.querySelector("html")
+//     const currClass = htmlElem.classList[0]
+//     switch(currClass) {
+//         case "themeDark":
+//             htmlElem.classList.remove("themeDark")
+//             htmlElem.classList.add("themeLight")
+//         break;
+//         case "themeLight":
+//             htmlElem.classList.remove("themeLight")
+//             htmlElem.classList.add("themeContrast")
+//         break;
+//         case "themeContrast":
+//                 htmlElem.classList.remove("themeContrast")
+//                 htmlElem.classList.add("themeDark")
+//         break;
+//     }
+// })
 
 let curSugIdx = -1
 let tempInputVal = ""
@@ -754,6 +804,7 @@ function handleClickAll(e) {
     closeExpandersBottom(e)
     closeDetails(e)
     closeSearchBar(e)
+    closeThemesList(e)
     function closeExpandersTop(e) {
         const topExpanders = document.querySelectorAll(".expElemTop")
         const openExpanders = Array.from(topExpanders).some(exp => exp.classList.contains("activeTop"))
@@ -804,6 +855,16 @@ function handleClickAll(e) {
             searchIcon.classList.remove("closeSearch")
             searchIcon.classList.add("search")
         }
+    }
+    function closeThemesList(e) {
+        // console.log(e.currentTarget)
+        // console.log(e.target)
+
+        const container = document.querySelector(".themesContainer")
+        if (container.contains(e.target)) return
+        const themes = document.querySelector(".themeList")
+        if (themes.classList.contains("hidden")) return
+        themes.classList.add("hidden")
     }
 }
 
